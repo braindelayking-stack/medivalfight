@@ -268,6 +268,7 @@ module.exports = {
     async execute(interaction) {
         const subcommand = interaction.options.getSubcommand();
         if (subcommand === 'inspect') {
+            await interaction.deferReply();
             const bossId = interaction.options.getString('boss');
             const boss = bosses.find(b => b.id === bossId);
             
@@ -323,11 +324,12 @@ module.exports = {
                 )
                 .setThumbnail('https://cdn-icons-png.flaticon.com/512/2232/2232688.png');
             
-            await interaction.reply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
             return;
         }
 
         // Fight subcommand
+        await interaction.deferReply();
         const bossId = interaction.options.getString('boss');
         const boss = bosses.find(b => b.id === bossId);
         const userId = interaction.user.id;
@@ -396,7 +398,7 @@ module.exports = {
 
         // Send initial embed
         const { embed, row } = createBossEmbed(fightState);
-        await interaction.reply({ embeds: [embed], components: [row] });
+        await interaction.editReply({ embeds: [embed], components: [row] });
         const message = await interaction.fetchReply();
         fightState.messageId = message.id;
 

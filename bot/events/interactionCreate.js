@@ -13,7 +13,8 @@ module.exports = {
             try {
                 await command.autocomplete(interaction);
             } catch (error) {
-                console.error(error);
+                console.error('Autocomplete error:', error);
+                // Don't crash on autocomplete errors
             }
         } else if (interaction.isChatInputCommand()) {
             const command = interaction.client.commands.get(interaction.commandName);
@@ -24,11 +25,15 @@ module.exports = {
             try {
                 await command.execute(interaction);
             } catch (error) {
-                console.error(error);
-                if (interaction.replied || interaction.deferred) {
-                    await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-                } else {
-                    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                console.error('Command error:', error);
+                try {
+                    if (interaction.replied || interaction.deferred) {
+                        await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+                    } else {
+                        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                    }
+                } catch (replyError) {
+                    console.error('Could not send error message:', replyError);
                 }
             }
         } else if (interaction.isButton()) {
@@ -39,7 +44,7 @@ module.exports = {
                     await profileCommand.handleButton(interaction);
                     return;
                 } catch (error) {
-                    console.error(error);
+                    console.error('Profile button error:', error);
                 }
             }
             // Check boss command buttons
@@ -48,7 +53,7 @@ module.exports = {
                 try {
                     await bossCommand.handleButton(interaction);
                 } catch (error) {
-                    console.error(error);
+                    console.error('Boss button error:', error);
                 }
             }
         }
