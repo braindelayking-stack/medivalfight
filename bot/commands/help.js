@@ -4,61 +4,92 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Get help with the medieval fantasy RPG bot!'),
+        .setDescription('Get complete help with the Medieval Fight RPG bot!'),
     async execute(interaction) {
+        // Defer reply to avoid unknown interaction errors
+        await interaction.deferReply();
+
         const helpEmbed = new EmbedBuilder()
-            .setColor('#8B4513')
-            .setTitle('⚔️ Medieval Fantasy RPG Help')
-            .setDescription('Welcome to the RPG! Here\'s how to play:')
+            .setColor('#FFD700')
+            .setTitle('⚔️ Medieval Fight RPG - Complete Help')
+            .setDescription('Welcome to Medieval Fight! Here\'s everything you need to know:')
             .addFields(
                 {
-                    name: '🎯 Creating a Profile',
-                    value: 'Use `/profile create` to start your adventure. You get 100 points to distribute!',
+                    name: '🎯 Getting Started',
+                    value: 'Use `/profile create` to start your adventure. You get 100 FREE points to distribute!',
                     inline: false
                 },
                 {
-                    name: '💪 Stats',
+                    name: '💪 Stat Point System',
                     value: `
-- Strength: Increases damage
-- Wealth: Earns more coins and has wealth-based abilities
-- Agility: Higher chance to dodge attacks
-- Composure: Increases max HP (Base HP is 25, +5 HP per point)
-- Free Points: Points you can distribute!
+- **Strength**: Increases damage dealt in battle
+- **Wealth**: Earns more coins from battles, unlocks wealth-based abilities
+- **Agility**: Higher chance to dodge boss attacks
+- **Composure**: Increases max HP (Base HP = 25, +5 HP per composure point)
+- **Free Points**: Unassigned points you can distribute using \`/profile distribute\`
                     `,
                     inline: false
                 },
                 {
-                    name: '👹 Boss Battles',
-                    value: 'Use `/boss fight` to battle bosses! Earn coins by winning!',
+                    name: '🪙 Coin System',
+                    value: 'Earn coins by defeating bosses! Coins are used to buy abilities in the shop. Wealth stat increases coin earnings!',
                     inline: false
                 },
                 {
-                    name: '📜 Abilities',
+                    name: '📜 Profile Commands',
                     value: `
-- Use \`/abilities view\` to see your owned abilities
-- Use \`/abilities buy\` to buy new abilities (with coins or stats!)
-- Use \`/abilities inspect\` to check ability details!
+- \`/profile create\`: Create your character
+- \`/profile view\`: View your stats, level, HP, coins, and owned abilities
+- \`/profile distribute\`: Spend free points to boost your stats
+- \`/profile reset\`: Reset your profile (WARNING: This deletes all progress!)
                     `,
                     inline: false
                 },
                 {
-                    name: '🪙 Economy',
-                    value: 'Earn coins by defeating bosses, use coins or stats to buy abilities!',
+                    name: '👹 Boss Commands',
+                    value: `
+- \`/boss list\`: List all available bosses with difficulty tiers
+- \`/boss inspect\`: View detailed info about a boss before fighting
+- \`/boss fight\`: Battle a boss to earn coins and glory
+                    `,
                     inline: false
                 },
                 {
-                    name: '📊 Profile',
-                    value: 'Use `/profile view` to see your stats, level, HP, and coins!',
+                    name: '⚡ Ability Commands',
+                    value: `
+- \`/abilities list\`: List all available abilities with categories
+- \`/abilities view\`: View your owned abilities
+- \`/abilities buy\`: Purchase new abilities
+- \`/abilities inspect\`: Inspect an ability's details
+- \`/abilities upgrade view\`: View your ability upgrade progress
+- \`/abilities upgrade ability\`: Upgrade an ability to make it stronger!
+                    `,
                     inline: false
                 },
                 {
-                    name: '🗄️ Battle Log',
-                    value: 'Use the link from your boss fight to view full battle history on the dashboard!',
+                    name: '🏪 Shop Commands',
+                    value: `
+- \`/shop buy\`: Buy items from the shop
+- \`/shop list\`: List all shop items
+- \`/role-shop buy\`: Buy roles from the role shop
+- \`/role-shop list\`: List available roles for purchase
+                    `,
+                    inline: false
+                },
+                {
+                    name: '📊 Leaderboard',
+                    value: 'Use `/leaderboard` to see the top players!',
+                    inline: false
+                },
+                {
+                    name: '🗄️ Dashboard',
+                    value: 'Visit the dashboard at https://medivalfight.alwaysdata.net for battle logs, profile management, and more!',
                     inline: false
                 }
             )
-            .setFooter({ text: 'Have fun! 🎮' });
+            .setFooter({ text: 'Conquer the realm! 🎮' })
+            .setTimestamp();
 
-        await interaction.reply({ embeds: [helpEmbed] });
+        await interaction.editReply({ embeds: [helpEmbed] });
     }
 };
