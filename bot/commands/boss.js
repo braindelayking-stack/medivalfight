@@ -270,7 +270,6 @@ module.exports = {
         if (subcommand === 'inspect') {
             const bossId = interaction.options.getString('boss');
             const boss = bosses.find(b => b.id === bossId);
-            const attachment = new AttachmentBuilder(boss.image);
             
             // Determine difficulty tier
             let difficulty, embedColor;
@@ -317,7 +316,6 @@ module.exports = {
                 .setColor(embedColor)
                 .setTitle(`👹 ${boss.name}`)
                 .setDescription(`${difficulty} Boss`)
-                .setImage(`attachment://${path.basename(boss.image)}`)
                 .addFields(
                     { name: '❤️ Max Health', value: `${boss.maxHealth}`, inline: true },
                     { name: '💰 Reward', value: `${boss.reward} coins`, inline: true },
@@ -325,7 +323,7 @@ module.exports = {
                 )
                 .setThumbnail('https://cdn-icons-png.flaticon.com/512/2232/2232688.png');
             
-            await interaction.reply({ embeds: [embed], files: [attachment] });
+            await interaction.reply({ embeds: [embed] });
             return;
         }
 
