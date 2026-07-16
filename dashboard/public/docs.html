@@ -1,0 +1,498 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 Medieval Fantasy RPG - Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #0a0604 0%, #1a0f0a 30%, #2d1b13 60%, #1a0f0a 100%);
+            color: #f4e4bc;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(10, 6, 4, 0.98) 0%, rgba(26, 15, 10, 0.98) 100%);
+            border-right: 3px solid #8B4513;
+            padding: 25px 20px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+        }
+        .sidebar h2 {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            margin-top: 0;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #5d3a1a;
+            padding-bottom: 15px;
+        }
+        .sidebar a {
+            display: block;
+            color: #f4e4bc;
+            text-decoration: none;
+            padding: 14px 18px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(93, 58, 26, 0.3) 0%, rgba(60, 35, 15, 0.4) 100%);
+            border: 1px solid rgba(93, 58, 26, 0.5);
+            transition: all 0.3s ease;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .sidebar a:hover {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.5) 0%, rgba(93, 58, 26, 0.6) 100%);
+            color: #ffd700;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            flex: 1;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(45, 27, 19, 0.85) 0%, rgba(26, 15, 10, 0.9) 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #8B4513;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(139, 69, 19, 0.15);
+        }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 2px 2px 4px #000;
+            font-size: 2.8rem;
+            margin-bottom: 35px;
+            letter-spacing: 2px;
+        }
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: #e6a23c;
+            border-bottom: 2px solid #8B4513;
+            padding-bottom: 12px;
+            margin-top: 40px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 2px #000;
+        }
+        h3 {
+            font-family: 'Cinzel', serif;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        .section {
+            margin: 35px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(26, 15, 10, 0.6) 0%, rgba(15, 9, 6, 0.7) 100%);
+            border-radius: 15px;
+            border: 2px solid #5d3a1a;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .boss-card, .ability-card {
+            background: linear-gradient(135deg, rgba(26, 15, 10, 0.8) 0%, rgba(15, 9, 6, 0.9) 100%);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border: 2px solid #5d3a1a;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .boss-card:hover, .ability-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15), 0 5px 20px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+        .boss-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
+            border: 3px solid #8B4513;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        .boss-info, .ability-info { flex: 1; }
+        .boss-info h3 {
+            margin-top: 0;
+            color: #ffd700;
+            font-size: 1.6rem;
+        }
+        .stat {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        ul { list-style: none; padding-left: 0; }
+        li {
+            margin: 15px 0;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(93, 58, 26, 0.35) 0%, rgba(60, 35, 15, 0.45) 100%);
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        code {
+            background: rgba(0,0,0,0.5);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #ffd700;
+            font-family: 'Courier New', monospace;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .boss-card, .ability-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .boss-image { width: 150px; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📜 Contents</h2>
+        <a href="#getting-started">🎮 Getting Started</a>
+        <a href="#stats">💪 Stats Explained</a>
+        <a href="#abilities">📜 Abilities</a>
+        <a href="#ability-upgrades">⬆️ Ability Upgrades</a>
+        <a href="#bosses">👹 Bosses</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>⚔️ Medieval Fantasy RPG</h1>
+
+            <div class="section" id="getting-started">
+                <h2>🎮 Getting Started</h2>
+                <ul>
+                    <li>Use <code>/profile create</code> to create your character and get 100 free points to distribute!</li>
+                    <li>Use <code>/profile view</code> to see your current stats!</li>
+                    <li>Use <code>/profile distribute</code> to distribute your free points!</li>
+                    <li>Use <code>/boss fight</code> to battle bosses and earn coins!</li>
+                    <li>Use <code>/abilities buy</code> to buy abilities!</li>
+                    <li>Use <code>/abilities upgrade</code> to upgrade your abilities (up to 15 levels!)!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="stats">
+                <h2>💪 Stats Explained</h2>
+                <ul>
+                    <li><span class="stat">⚔️ Strength</span>: Increases your damage in battle, used for Strength ability upgrades!</li>
+                    <li><span class="stat">💰 Wealth</span>: Increases your coin earnings, used for Wealth ability upgrades!</li>
+                    <li><span class="stat">🏃 Agility</span>: Higher chance to dodge attacks, used for Agility ability upgrades!</li>
+                    <li><span class="stat">🧘 Composure/Health</span>: Increases max HP (base HP is 25, +5 HP per point)! Used for Composure ability upgrades!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="abilities">
+                <h2>📜 Abilities</h2>
+
+                <h3 style="color: #90EE90;">🟢 Weak Abilities (20 coins each)</h3>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>🔥 Fire Attack</h4>
+                        <p>Shoot a fireball dealing 10 base damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>💧 Water Attack</h4>
+                        <p>Shoot a waterball dealing 10 base damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>🌍 Earth Attack</h4>
+                        <p>Shoot an earthball dealing 10 base damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>💨 Air Attack</h4>
+                        <p>Shoot an airball dealing 10 base damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>💰 Sacrifice</h4>
+                        <p>Spend coins to heal yourself during battle</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>🏃 Dodge</h4>
+                        <p>Dodge the next attack with 50% chance</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>⚡ Attack Boost</h4>
+                        <p>Boost your next attack by 2x</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>🧘 Composure Defense</h4>
+                        <p>Reduce damage by 50% when below 20% HP</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #FFD700;">🟡 Mid-Tier Abilities</h3>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>💥 Smash (100 strength)</h4>
+                        <p>30 base damage, shatters boss shields, but you take 1.2x damage next hit</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>💵 Bribe (120 wealth)</h4>
+                        <p>Spend 50 wealth to skip the boss's next attack</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>🏃‍♂️ Quick Step (110 agility)</h4>
+                        <p>Dodge the next boss attack and counter for 15 damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>🛡️ Iron Will (90 composure)</h4>
+                        <p>Reduce all incoming damage by 50% for 5 seconds</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #FF6347;">🔴 Strong Abilities</h3>
+                <div class="ability-card">
+                    <div class="ability-info">-
+                        <h4>🔥 Berserk (250 strength)</h4>
+                        <p>Sacrifice 20% current HP to deal 50 base damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>✨ Golden Touch (280 wealth)</h4>
+                        <p>Convert 30 wealth into 30 points AND deal 25 damage</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>👤 Shadow Strike (260 agility)</h4>
+                        <p>40 damage and stun the boss for 2 seconds</p>
+                    </div>
+                </div>
+                <div class="ability-card">
+                    <div class="ability-info">
+                        <h4>⚔️ Last Stand (270 composure)</h4>
+                        <p>If below 20% HP: heal to 50% max HP and 2x attack boost (once per fight)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="ability-upgrades">
+                <h2>⬆️ Ability Upgrades</h2>
+                <ul>
+                    <li>Use <code>/abilities upgrade view</code> to see upgrade levels for your abilities!</li>
+                    <li>Use <code>/abilities upgrade</code> to spend attribute points (strength/wealth/agility/composure) to upgrade abilities!</li>
+                    <li>Each upgrade costs (30 + current level * 30) points of the corresponding attribute!</li>
+                    <li>Max upgrade level is 15!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="bosses">
+                <h2>👹 Bosses</h2>
+
+                <h3 style="color: #90EE90;">🟢 Easy Bosses (≤100 HP)</h3>
+                <div class="boss-card">
+                    <img src="/golem.png" alt="Golem" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🪨 Golem</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 100</p>
+                        <p><span class="stat">💰 Reward</span>: 100 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Golem Attack (10 dmg), Poison Attack, Shield</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/dragon.png" alt="Dragon" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🐉 Dragon</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 100</p>
+                        <p><span class="stat">💰 Reward</span>: 100 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Dragon Attack (20 dmg), Fire Attack, Shield</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/skeleton.png" alt="Skeleton" class="boss-image">
+                    <div class="boss-info">
+                        <h3>💀 Skeleton</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 100</p>
+                        <p><span class="stat">💰 Reward</span>: 100 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Skeleton Attack (15 dmg), Shield, Skeleton Army</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #FFD700;">🟡 Mid Bosses (150-200 HP)</h3>
+                <div class="boss-card">
+                    <img src="/wraith_king.png" alt="Wraith King" class="boss-image">
+                    <div class="boss-info">
+                        <h3>👻 Wraith King</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 150</p>
+                        <p><span class="stat">💰 Reward</span>: 200 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Spectral Slash (18 dmg), Soul Drain, Wraith Summon, Phantom Shield</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/vampire_lord.png" alt="Vampire Lord" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🧛 Vampire Lord</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 150</p>
+                        <p><span class="stat">💰 Reward</span>: 250 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Blood Slash (15 dmg), Blood Drain, Dark Mist</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/storm_elemental.png" alt="Storm Elemental" class="boss-image">
+                    <div class="boss-info">
+                        <h3>⚡ Storm Elemental</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 200</p>
+                        <p><span class="stat">💰 Reward</span>: 300 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Lightning Strike (20 dmg), Thunder Shock, Electric Shield</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/fire_elemental.png" alt="Fire Elemental" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🔥 Fire Elemental</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 200</p>
+                        <p><span class="stat">💰 Reward</span>: 350 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Inferno Blast (25 dmg), Firestorm, Heat Wave, Magma Barrier</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #FF6347;">🔴 Strong Bosses (250-300 HP)</h3>
+                <div class="boss-card">
+                    <img src="/ice_giant.png" alt="Ice Giant" class="boss-image">
+                    <div class="boss-info">
+                        <h3>❄️ Ice Giant</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 250</p>
+                        <p><span class="stat">💰 Reward</span>: 400 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Frozen Strike (25 dmg), Ice Prison, Ice Shield</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/shadow_assassin.png" alt="Shadow Assassin" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🗡️ Shadow Assassin</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 250</p>
+                        <p><span class="stat">💰 Reward</span>: 450 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Shadow Strike (40 dmg), Smoke Bomb, Poison Blade</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/ancient_phoenix.png" alt="Ancient Phoenix" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🔥 Ancient Phoenix</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 300</p>
+                        <p><span class="stat">💰 Reward</span>: 500 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Flame Burst (30 dmg), Burning Wings, Rebirth Flame</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/ancient_mummy.png" alt="Ancient Mummy" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🦴 Ancient Mummy</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 300</p>
+                        <p><span class="stat">💰 Reward</span>: 550 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Curse Strike (20 dmg), Ancient Curse, Resurrection</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/lich_lord.png" alt="Lich Lord" class="boss-image">
+                    <div class="boss-info">
+                        <h3>💀 Lich Lord</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 275</p>
+                        <p><span class="stat">💰 Reward</span>: 600 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Death Ray (30 dmg), Curse of Decay, Raise Undead, Bone Shield, Life Steal</p>
+                    </div>
+                </div>
+
+                <h3 style="color: #4B0082;">⚫ Very Strong Bosses (>300 HP)</h3>
+                <div class="boss-card">
+                    <img src="/demon_king.png" alt="Demon King" class="boss-image">
+                    <div class="boss-info">
+                        <h3>👹 Demon King</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 350</p>
+                        <p><span class="stat">💰 Reward</span>: 700 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Demon Blade (30 dmg), Hellfire, Dark Barrier</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/sea_kraken.png" alt="Sea Kraken" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🐙 Sea Kraken</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 400</p>
+                        <p><span class="stat">💰 Reward</span>: 800 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Tentacle Smash (35 dmg), Water Prison, Tidal Wave</p>
+                    </div>
+                </div>
+                <div class="boss-card">
+                    <img src="/void_destroyer.png" alt="Void Destroyer" class="boss-image">
+                    <div class="boss-info">
+                        <h3>🌑 Void Destroyer</h3>
+                        <p><span class="stat">❤️ Max Health</span>: 500</p>
+                        <p><span class="stat">💰 Reward</span>: 1000 coins</p>
+                        <p><span class="stat">🗡️ Attacks</span>: Void Blast (50 dmg), Reality Break, Void Shield</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

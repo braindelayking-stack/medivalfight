@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ Medieval Fantasy RPG Bot - Conquer the Realm!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #0a0604 0%, #1a0f0a 30%, #2d1b13 60%, #1a0f0a 100%);
+            color: #f4e4bc;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(180deg, rgba(10, 6, 4, 0.9) 0%, rgba(26, 15, 10, 0.85) 100%);
+            border-bottom: 4px solid #8B4513;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 3px 3px 6px #000;
+            letter-spacing: 3px;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            color: #e6a23c;
+        }
+        .invite-btn {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 50%, #ffd700 100%);
+            color: #1a0f0a;
+            border: 4px solid #8B4513;
+            border-radius: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 8px 25px rgba(0,0,0,0.6);
+            transition: all 0.3s ease;
+            font-weight: 700;
+        }
+        .invite-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 0 12px 35px rgba(0,0,0,0.7);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .section {
+            background: linear-gradient(135deg, rgba(45, 27, 19, 0.85) 0%, rgba(26, 15, 10, 0.9) 100%);
+            border: 3px solid #8B4513;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7), inset 0 0 30px rgba(139, 69, 19, 0.15);
+        }
+        .section h2 {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid #8B4513;
+            padding-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, rgba(26, 15, 10, 0.8) 0%, rgba(15, 9, 6, 0.9) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #5d3a1a;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(255, 215, 0, 0.2), 0 8px 25px rgba(0,0,0,0.6);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+        .feature-card h3 {
+            font-family: 'Cinzel', serif;
+            color: #e6a23c;
+            font-size: 1.5rem;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        .feature-icon {
+            font-size: 3.5rem;
+        }
+        .boss-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .boss-gallery-item {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(26, 15, 10, 0.8) 0%, rgba(15, 9, 6, 0.9) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #5d3a1a;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .boss-gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2), 0 6px 20px rgba(0,0,0,0.6);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+        .boss-gallery-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 12px;
+            border: 3px solid #8B4513;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        .boss-gallery-item h4 {
+            font-family: 'Cinzel', serif;
+            margin: 0;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+        .commands-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .commands-list li {
+            padding: 18px 25px;
+            background: linear-gradient(135deg, rgba(93, 58, 26, 0.35) 0%, rgba(60, 35, 15, 0.45) 100%);
+            border-radius: 10px;
+            margin: 12px 0;
+            border-left: 4px solid #ffd700;
+            font-size: 1.15rem;
+            line-height: 1.7;
+        }
+        .commands-list code {
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 5px;
+            color: #ffd700;
+            font-family: 'Courier New', monospace;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.2rem; }
+            .invite-btn { padding: 15px 35px; font-size: 1.2rem; }
+            .section { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>⚔️ Medieval Fantasy RPG</h1>
+        <p>Embark on an epic journey! Battle legendary bosses, master powerful abilities, upgrade your skills, and become the mightiest warrior in the realm!</p>
+        <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=268486656&scope=bot%20applications.commands" class="invite-btn">✨ Add to Discord</a>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>🌟 Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">👹</span>
+                    <h3>Boss Battles</h3>
+                    <p>Challenge 15 unique bosses with varying difficulty tiers, each with special attacks!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📜</span>
+                    <h3>16 Powerful Abilities</h3>
+                    <p>Buy, upgrade, and master abilities from four categories (Strength, Wealth, Agility, Composure)!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">⬆️</span>
+                    <h3>Ability Upgrades</h3>
+                    <p>Upgrade abilities up to level 15 using attribute points for massive power boosts!</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💪</span>
+                    <h3>Customizable Stats</h3>
+                    <p>Distribute points to Strength, Wealth, Agility, and Composure to build your perfect hero!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎮 Essential Commands</h2>
+            <ul class="commands-list">
+                <li><code>/profile create</code> – Create your character and get 100 free points!</li>
+                <li><code>/profile distribute</code> – Spend points to boost your stats!</li>
+                <li><code>/profile view</code> – View your current character stats!</li>
+                <li><code>/boss fight [boss]</code> – Battle a boss for coins!</li>
+                <li><code>/boss inspect [boss]</code> – View boss details before fighting!</li>
+                <li><code>/abilities buy [ability]</code> – Purchase new abilities!</li>
+                <li><code>/abilities upgrade [ability]</code> – Upgrade your abilities (up to level 15)!</li>
+                <li><code>/abilities upgrade view [ability]</code> – Check your upgrade progress!</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>👹 Legendary Bosses</h2>
+            <div class="boss-gallery">
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/golem.png" alt="Golem" class="boss-gallery-img">
+                    <h4>🪨 Golem</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/dragon.png" alt="Dragon" class="boss-gallery-img">
+                    <h4>🐉 Dragon</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/skeleton.png" alt="Skeleton" class="boss-gallery-img">
+                    <h4>💀 Skeleton</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/wraith_king.png" alt="Wraith King" class="boss-gallery-img">
+                    <h4>👻 Wraith King</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/vampire_lord.png" alt="Vampire Lord" class="boss-gallery-img">
+                    <h4>🧛 Vampire Lord</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/storm_elemental.png" alt="Storm Elemental" class="boss-gallery-img">
+                    <h4>⚡ Storm Elemental</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/fire_elemental.png" alt="Fire Elemental" class="boss-gallery-img">
+                    <h4>🔥 Fire Elemental</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/ice_giant.png" alt="Ice Giant" class="boss-gallery-img">
+                    <h4>❄️ Ice Giant</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/shadow_assassin.png" alt="Shadow Assassin" class="boss-gallery-img">
+                    <h4>🗡️ Shadow Assassin</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/ancient_phoenix.png" alt="Ancient Phoenix" class="boss-gallery-img">
+                    <h4>🔥 Ancient Phoenix</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/ancient_mummy.png" alt="Ancient Mummy" class="boss-gallery-img">
+                    <h4>🦴 Ancient Mummy</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/lich_lord.png" alt="Lich Lord" class="boss-gallery-img">
+                    <h4>💀 Lich Lord</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/demon_king.png" alt="Demon King" class="boss-gallery-img">
+                    <h4>👹 Demon King</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/sea_kraken.png" alt="Sea Kraken" class="boss-gallery-img">
+                    <h4>🐙 Sea Kraken</h4>
+                </div>
+                <div class="boss-gallery-item">
+                    <img src="dashboard/public/void_destroyer.png" alt="Void Destroyer" class="boss-gallery-img">
+                    <h4>🌑 Void Destroyer</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

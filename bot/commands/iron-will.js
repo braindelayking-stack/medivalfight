@@ -1,0 +1,61 @@
+
+const { SlashCommandBuilder } = require('discord.js');
+const db = require('../../database/db');
+const bossCommand = require('./boss.js');
+
+// Cooldown tracker (10 seconds)
+const cooldowns = new Map();
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('iron-will')
+        .setDescription('🛡️ Reduce all incoming damage by 50% for 5 seconds'),
+    async execute(interaction) {
+        const userId = interaction.user.id;
+        const serverId = interaction.guild.id;
+        const now = Date.now();
+
+        // Check cooldown
+        if (cooldowns.has(userId)) {
+            const remaining = (cooldowns.get(userId) - now) / 1000;
+            if (remaining > 0) {
+                await interaction.reply({ content: `You're on cooldown! Wait ${remaining.toFixed(1)}s!`, ephemeral: true });
+                return;
+            }
+        }
+
+        // Check if user has the ability
+        const ability = db.prepare('SELECT * FROM user_abilities WHERE user_id = ? AND server_id = ? AND ability_id = ?').get(userId, serverId, 'iron_will');
+        if (!ability) {
+            await interaction.reply({ content: '❌ You need to buy this ability from /shop first!', ephemeral: true });
+            return;
+        }
+
+        // Check if in boss fight
+        const bossFightId = `${serverId}-${userId}`;
+        if (bossCommand.activeBossFights.has(bossFightId)) {
+            const state = bossCommand.activeBossFights.get(bossFightId);
+
+            // Check if user is stunned
+            if (state.userEffects.stun.active) {
+                await interaction.reply({ content: '😵 You are stunned and can\'t use this!', ephemeral: true });
+                return;
+            }
+
+            // Activate iron will
+            state.userEffects.ironWill = { active: true, duration: 5 };
+            state.log.push(`🛡️ You used Iron Will! All damage is reduced by 50% for 5 seconds!`);
+
+            // Update embed
+            const message = await interaction.channel.messages.fetch(state.messageId);
+            const { embed: newEmbed, row: newRow } = bossCommand.createBossEmbed(state);
+            await message.edit({ embeds: [newEmbed], components: [newRow] });
+
+            cooldowns.set(userId, now + 10000);
+            await interaction.reply({ content: '🛡️ You used Iron Will!', ephemeral: true });
+            return;
+        }
+
+        await interaction.reply({ content: 'You ain\'t in a battle or boss fight', ephemeral: true });
+    }
+};

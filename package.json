@@ -1,0 +1,31 @@
+{
+  "name": "the-actual-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bot": "node bot/index.js",
+    "deploy": "node bot/deploy-commands.js",
+    "dashboard": "node dashboard/server.js",
+    "start": "npm run deploy && npm run bot & npm run dashboard"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "@napi-rs/canvas": "^1.0.2",
+    "better-sqlite3": "^12.11.1",
+    "cors": "^2.8.6",
+    "discord-api-types": "^0.38.49",
+    "discord.js": "^14.26.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "node-fetch": "^2.7.0",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "sharp": "^0.35.3"
+  }
+}

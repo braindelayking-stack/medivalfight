@@ -1,0 +1,293 @@
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;🛡️ Battle Log - Medieval Fantasy RPG&lt;/title&gt;
+    &lt;link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&amp;family=Crimson+Text:wght@400;600&amp;display=swap" rel="stylesheet"&gt;
+    &lt;style&gt;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #0a0604 0%, #1a0f0a 30%, #2d1b13 60%, #1a0f0a 100%);
+            color: #f4e4bc;
+            min-height: 100vh;
+        }
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 3px solid #8B4513;
+            margin-bottom: 2.5rem;
+        }
+        header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6),
+                         2px 2px 4px #000;
+            letter-spacing: 2px;
+        }
+        nav {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        nav a {
+            color: #f4e4bc;
+            text-decoration: none;
+            padding: 0.75rem 1.75rem;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(93, 58, 26, 0.3) 0%, rgba(60, 35, 15, 0.4) 100%);
+            transition: all 0.3s ease;
+            font-family: 'Cinzel', serif;
+        }
+        nav a:hover {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.5) 0%, rgba(93, 58, 26, 0.6) 100%);
+            color: #ffd700;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        section {
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(45, 27, 19, 0.85) 0%, rgba(26, 15, 10, 0.9) 100%);
+            border-radius: 15px;
+            border: 2px solid #8B4513;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        section h2 {
+            font-family: 'Cinzel', serif;
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            text-shadow: 1px 1px 2px #000;
+        }
+        section h3 {
+            color: #e6a23c;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+            font-family: 'Cinzel', serif;
+        }
+        ul { list-style: none; padding-left: 1rem; }
+        li { margin: 0.5rem 0; }
+        li strong { color: #FFD700; }
+        code {
+            background: rgba(0,0,0,0.5);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: #ffd700;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: #f4e4bc;
+            font-size: 1.1rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.4);
+            color: #f4e4bc;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+        .form-group button {
+            background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+            color: #fff;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+        .form-group button:hover {
+            background: linear-gradient(135deg, #a0522d 0%, #8B4513 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        .stats-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.5rem;
+            border: 2px solid #8B4513;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(26,15,10,0.6) 0%, rgba(15,9,6,0.7) 100%);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+        .stat-card h4 {
+            color: #FFD700;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+            font-family: 'Cinzel', serif;
+        }
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .log-entry {
+            margin: 0.75rem 0;
+            padding: 1rem 1.25rem;
+            background: rgba(26, 15, 10, 0.7);
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+            transition: all 0.2s ease;
+        }
+        .log-entry:hover {
+            background: rgba(45, 27, 19, 0.8);
+            transform: translateX(5px);
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;header&gt;
+            &lt;h1&gt;🛡️ Battle Log&lt;/h1&gt;
+            &lt;nav&gt;
+                &lt;a href="/"&gt;Home&lt;/a&gt;
+                &lt;a href="/docs"&gt;Documentation&lt;/a&gt;
+            &lt;/nav&gt;
+        &lt;/header&gt;
+
+        &lt;section&gt;
+            &lt;h2&gt;Enter Battle Code&lt;/h2&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="battleCode"&gt;Battle Code (without the #)&lt;/label&gt;
+                &lt;input type="text" id="battleCode" placeholder="e.g., abc123"&gt;
+                &lt;button onclick="loadBattleLog()"&gt;Load Battle Log&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section id="battleLogSection" style="display: none;"&gt;
+            &lt;h2&gt;Battle Details&lt;/h2&gt;
+            &lt;div class="stats-container"&gt;
+                &lt;div class="stat-card"&gt;
+                    &lt;h4&gt;⚔️ Boss&lt;/h4&gt;
+                    &lt;p id="bossName"&gt;-&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div class="stat-card"&gt;
+                    &lt;h4&gt;💥 Damage Given&lt;/h4&gt;
+                    &lt;p id="damageGiven" style="color: #00ff00;"&gt;-&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div class="stat-card"&gt;
+                    &lt;h4&gt;❤️ Damage Taken&lt;/h4&gt;
+                    &lt;p id="damageTaken" style="color: #ff6347;"&gt;-&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div class="stat-card"&gt;
+                    &lt;h4&gt;🏆 Outcome&lt;/h4&gt;
+                    &lt;p id="outcome"&gt;-&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;h3&gt;Full Battle Log&lt;/h3&gt;
+            &lt;div id="logContainer"&gt;&lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section id="errorSection" style="display: none;"&gt;
+            &lt;h2&gt;Error&lt;/h2&gt;
+            &lt;p id="errorMessage" style="color: #ff6347; font-size: 1.1rem;"&gt;&lt;/p&gt;
+        &lt;/section&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Check if there's a code in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeFromUrl = urlParams.get('code');
+        if (codeFromUrl) {
+            document.getElementById('battleCode').value = codeFromUrl;
+            loadBattleLog();
+        }
+
+        async function loadBattleLog() {
+            const code = document.getElementById('battleCode').value.trim();
+            if (!code) {
+                alert('Please enter a battle code!');
+                return;
+            }
+
+            // Hide sections
+            document.getElementById('battleLogSection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'none';
+
+            try {
+                const response = await fetch(`/api/battle-log/${code}`);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    document.getElementById('errorMessage').textContent = errorData.error || 'Battle log not found';
+                    document.getElementById('errorSection').style.display = 'block';
+                    return;
+                }
+
+                const log = await response.json();
+
+                // Update battle details
+                document.getElementById('bossName').textContent = log.boss_name;
+                document.getElementById('damageGiven').textContent = log.damage_given;
+                document.getElementById('damageTaken').textContent = log.damage_taken;
+                document.getElementById('outcome').textContent = log.player_won ? 'Victory! 🎉' : 'Defeat 💀';
+                document.getElementById('outcome').style.color = log.player_won ? '#00ff00' : '#ff6347';
+
+                // Update log container
+                const logContainer = document.getElementById('logContainer');
+                logContainer.innerHTML = '';
+                log.full_log.forEach(entry =&gt; {
+                    const logEntry = document.createElement('div');
+                    logEntry.className = 'log-entry';
+                    logEntry.textContent = entry;
+                    logContainer.appendChild(logEntry);
+                });
+
+                // Show the battle log section
+                document.getElementById('battleLogSection').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading battle log:', error);
+                document.getElementById('errorMessage').textContent = 'An error occurred loading the battle log';
+                document.getElementById('errorSection').style.display = 'block';
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;

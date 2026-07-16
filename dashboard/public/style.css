@@ -1,0 +1,146 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Crimson Text', serif;
+    background: url('https://coresg-normal.trae.ai/api/v1/text_to_image?prompt=medieval%20stone%20castle%20background&image_size=square_hd') no-repeat center center fixed;
+    background-size: cover;
+    color: #4a2c0f;
+    min-height: 100vh;
+    position: relative;
+}
+.scroll-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(139, 69, 19, 0.4);
+    z-index: -1;
+}
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+.castle-header {
+    text-align: center;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+.castle-header h1 {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 2.5rem;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+.nav-link {
+    display: inline-block;
+    margin: 0.5rem 1rem;
+    color: #ffd700;
+    text-decoration: none;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px #000;
+}
+.nav-link:hover {
+    text-decoration: underline;
+}
+.hidden { display: none !important; }
+.parchment {
+    background: #f5deb3;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    border: 4px solid #8b4513;
+}
+.parchment h2 {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #4a2c0f;
+}
+.medieval-btn {
+    background: linear-gradient(to bottom, #d4a574, #8b4513);
+    border: 3px solid #4a2c0f;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Crimson Text', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+}
+.medieval-btn:hover {
+    background: linear-gradient(to bottom, #e6b88a, #a0522d);
+}
+.medieval-input {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 2px solid #8b4513;
+    border-radius: 4px;
+    background: #fff8e1;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+}
+.profile-section {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #8b4513;
+}
+.stats-grid, .guilds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.stat-card, .guild-card {
+    background: #fff8e1;
+    padding: 1rem;
+    border: 2px solid #8b4513;
+    border-radius: 6px;
+}
+.guild-card {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.guild-card:hover {
+    background: #ffe0b2;
+    transform: translateY(-2px);
+}
+.role-shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.role-shop-slot {
+    background: #fff8e1;
+    padding: 1rem;
+    border: 2px solid #8b4513;
+    border-radius: 6px;
+}
+.role-shop-slot h5 {
+    font-family: 'MedievalSharp', cursive;
+    color: #4a2c0f;
+    margin-bottom: 0.5rem;
+}
+.slot-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.delete-btn {
+    background: linear-gradient(to bottom, #ff6b6b, #c0392b);
+}

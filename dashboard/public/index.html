@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medieval Bot Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scroll-bg"></div>
+    <div class="container">
+        <header class="castle-header">
+            <h1>⚔️ Medieval Kingdom Dashboard ⚔️</h1>
+            <nav id="nav">
+                <a href="#" id="nav-home" class="nav-link">Home</a>
+                <a href="/docs" id="nav-docs" class="nav-link">Documentation</a>
+                <a href="/battle-log" id="nav-battle-log" class="nav-link">Battle Log</a>
+                <a href="#" id="nav-dashboard" class="nav-link hidden">Dashboard</a>
+                <a href="#" id="nav-logout" class="nav-link hidden">Logout</a>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <div id="home" class="page">
+                <div class="parchment">
+                    <h2>Welcome, Traveler!</h2>
+                    <p>Login with Discord to manage your profile and servers!</p>
+                    <a href="/auth/discord" class="medieval-btn">Login with Discord</a>
+                    <p style="margin-top: 1rem;"><a href="/docs" style="color: #8B4513; text-decoration: none;">📚 Read the Documentation</a></p>
+                </div>
+            </div>
+
+            <div id="dashboard" class="page hidden">
+                <div class="parchment">
+                    <h2>Your Kingdom</h2>
+                    <div class="profile-section">
+                        <img id="user-avatar" src="" alt="Avatar" class="avatar">
+                        <div>
+                            <label>Game Name:</label>
+                            <input type="text" id="game-username" class="medieval-input">
+                            <label>Game Avatar URL:</label>
+                            <input type="text" id="game-avatar" class="medieval-input">
+                            <button id="save-profile" class="medieval-btn">Save Changes</button>
+                        </div>
+                    </div>
+                    <div id="stats"></div>
+                    <div id="guilds"></div>
+                </div>
+            </div>
+
+            <div id="server-management" class="page hidden">
+                <div class="parchment">
+                    <h2>Server Management</h2>
+                    <button id="back-to-dashboard" class="medieval-btn">← Back to Dashboard</button>
+                    <h3 id="server-name">Server Name</h3>
+                    <h4>Role Shop Configuration (Slots 1-10)</h4>
+                    <div id="role-shop-slots" class="role-shop-grid"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
