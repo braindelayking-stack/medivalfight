@@ -7,7 +7,8 @@
     "bot": "node bot/index.js",
     "deploy": "node bot/deploy-commands.js",
     "dashboard": "node dashboard/server.js",
-    "start": "npm run deploy && npm run bot & npm run dashboard"
+    "start": "npm run deploy && npm run bot & npm run dashboard",
+    "start:prod": "npm run bot & npm run dashboard"
   },
   "keywords": [],
   "author": "",
