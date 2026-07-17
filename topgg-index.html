@@ -9,8 +9,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Crimson Text', serif;
-            background: linear-gradient(135deg, #0a0604 0%, #1a0f0a 25%, #2d1b13 50%, #1a0f0a 75%, #0a0604 100%);
-            color: #f4e4bc;
+            background: linear-gradient(135deg, #1a0f0a 0%, #2d1b13 25%, #1a0f0a 50%, #0a0604 75%, #1a0f0a 100%);
+            color: #e0d2b6;
             overflow-x: hidden;
             position: relative;
         }
@@ -19,12 +19,12 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
-                              radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.12) 0%, transparent 50%);
+            background-image: radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.1) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 70%, rgba(60, 30, 15, 0.2) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
-        /* Floating particles */
+        /* Subtle floating embers */
         .particles {
             position: fixed;
             top: 0; left: 0;
@@ -34,10 +34,10 @@
         }
         .particle {
             position: absolute;
-            width: 4px; height: 4px;
-            background: rgba(255, 215, 0, 0.4);
+            width: 3px; height: 3px;
+            background: rgba(205, 133, 63, 0.5);
             border-radius: 50%;
-            animation: float 15s infinite linear;
+            animation: float 20s infinite linear;
         }
         @keyframes float {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
@@ -59,26 +59,19 @@
         }
         .hero-title {
             font-family: 'Cinzel', serif;
-            font-size: clamp(3rem, 10vw, 6rem);
-            font-weight: 900;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 25%, #ffd700 50%, #b8860b 75%, #ffd700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            color: #c9a86c;
+            letter-spacing: 0.1em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             margin-bottom: 1.5rem;
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4)); }
-            50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
         }
         .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: #e6a23c;
-            max-width: 800px;
-            margin-bottom: 3rem;
-            line-height: 1.6;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: #c9a86c;
+            max-width: 900px;
+            margin-bottom: 2rem;
+            line-height: 1.7;
         }
         .btn-group {
             display: flex;
@@ -88,188 +81,200 @@
         }
         .btn {
             font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            padding: 1.2rem 3rem;
-            border: none;
-            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 1rem 2.5rem;
+            border: 2px solid #8b5a2b;
+            border-radius: 8px;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #ffd700 0%, #b8860b 50%, #ffd700 100%);
-            color: #1a0f0a;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.3);
-        }
-        .btn-secondary {
             background: linear-gradient(135deg, #2d1b13 0%, #1a0f0a 100%);
-            color: #ffd700;
-            border: 2px solid #8b4513;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            color: #c9a86c;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         }
-        .btn-secondary:hover {
-            transform: translateY(-5px) scale(1.05);
-            border-color: #ffd700;
-            box-shadow: 0 20px 50px rgba(139, 69, 19, 0.5);
+        .btn:hover {
+            transform: translateY(-3px);
+            border-color: #c9a86c;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
         }
         /* Sections */
         .section {
-            max-width: 1200px;
-            margin: 6rem auto;
+            max-width: 1100px;
+            margin: 5rem auto;
             padding: 0 2rem;
             position: relative;
             z-index: 1;
         }
         .section-title {
             font-family: 'Cinzel', serif;
-            font-size: 3rem;
+            font-size: 2.2rem;
             text-align: center;
-            color: #ffd700;
-            margin-bottom: 3rem;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            color: #c9a86c;
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid rgba(139, 90, 43, 0.3);
+            padding-bottom: 1rem;
+            display: inline-block;
+            width: 100%;
         }
         /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
         }
         .feature-card {
-            background: linear-gradient(135deg, rgba(45, 27, 19, 0.9) 0%, rgba(26, 15, 10, 0.95) 100%);
-            border: 2px solid #5d3a1a;
-            border-radius: 20px;
-            padding: 2.5rem;
+            background: rgba(26, 15, 10, 0.95);
+            border: 1px solid #5d3a1a;
+            border-radius: 12px;
+            padding: 2rem;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         }
         .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: #ffd700;
-            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.6);
+            transform: translateY(-5px);
+            border-color: #8b5a2b;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
         }
         .feature-icon {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
         }
         .feature-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: #ffd700;
+            font-size: 1.3rem;
+            color: #c9a86c;
             margin-bottom: 1rem;
         }
         .feature-desc {
+            font-size: 1.05rem;
+            color: #d0c0a4;
+            line-height: 1.7;
+        }
+        /* Detailed Info Section */
+        .detailed-section {
+            background: rgba(26, 15, 10, 0.9);
+            border: 1px solid #5d3a1a;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+        .detailed-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: #c9a86c;
+            margin-bottom: 1.2rem;
+        }
+        .detailed-text {
             font-size: 1.1rem;
-            color: #f4e4bc;
-            line-height: 1.6;
+            color: #d0c0a4;
+            line-height: 1.8;
+            margin-bottom: 1rem;
         }
         /* Boss Gallery */
         .boss-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
         }
         .boss-card {
-            background: linear-gradient(135deg, rgba(26, 15, 10, 0.95) 0%, rgba(15, 9, 6, 0.98) 100%);
-            border: 2px solid #5d3a1a;
-            border-radius: 16px;
-            padding: 1.5rem;
+            background: rgba(26, 15, 10, 0.95);
+            border: 1px solid #5d3a1a;
+            border-radius: 10px;
+            padding: 1.2rem;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
         .boss-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            border-color: #ffd700;
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+            transform: translateY(-5px);
+            border-color: #8b5a2b;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
         }
         .boss-img {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 12px;
-            border: 3px solid #8b4513;
-            margin-bottom: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-        .boss-card:hover .boss-img {
-            border-color: #ffd700;
+            border-radius: 10px;
+            border: 2px solid #5d3a1a;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
         }
         .boss-name {
             font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            color: #ffd700;
+            font-size: 1.1rem;
+            color: #c9a86c;
         }
         /* Commands List */
         .commands-list {
             list-style: none;
             display: grid;
-            gap: 1.2rem;
+            gap: 1rem;
         }
         .command-item {
-            background: linear-gradient(90deg, rgba(93, 58, 26, 0.3) 0%, rgba(26, 15, 10, 0.4) 100%);
-            padding: 1.5rem 2rem;
-            border-radius: 12px;
-            border-left: 5px solid #ffd700;
+            background: rgba(26, 15, 10, 0.9);
+            padding: 1.2rem 1.8rem;
+            border-radius: 8px;
+            border-left: 4px solid #8b5a2b;
             transition: all 0.3s ease;
         }
         .command-item:hover {
-            transform: translateX(10px);
-            background: linear-gradient(90deg, rgba(139, 69, 19, 0.4) 0%, rgba(26, 15, 10, 0.5) 100%);
+            transform: translateX(8px);
+            border-left-color: #c9a86c;
+            background: rgba(45, 27, 19, 0.9);
         }
         .command-name {
             font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            color: #ffd700;
-            font-weight: 700;
+            font-size: 1.2rem;
+            color: #c9a86c;
+            font-weight: 600;
         }
         .command-desc {
-            font-size: 1.1rem;
-            color: #f4e4bc;
-            margin-top: 0.5rem;
+            font-size: 1.05rem;
+            color: #d0c0a4;
+            margin-top: 0.4rem;
+            line-height: 1.6;
         }
         /* Footer */
         .footer {
             text-align: center;
-            padding: 4rem 2rem;
-            border-top: 2px solid #5d3a1a;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(93, 58, 26, 0.5);
             margin-top: 4rem;
         }
         .footer-text {
             font-family: 'Cinzel', serif;
-            color: #e6a23c;
-            font-size: 1.1rem;
+            color: #a68b5b;
+            font-size: 1rem;
         }
         /* Responsive */
         @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
-            .btn { padding: 1rem 2rem; font-size: 1.1rem; }
+            .hero-title { font-size: 2rem; }
+            .section-title { font-size: 1.8rem; }
+            .btn { padding: 0.9rem 1.8rem; font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Particles -->
+    <!-- Subtle floating embers -->
     <div class="particles" id="particles"></div>
 
     <!-- Hero Section -->
     <section class="hero">
         <h1 class="hero-title">⚔️ MEDIEVAL FIGHT</h1>
         <p class="hero-subtitle">
-            Embark on an epic RPG journey! Battle legendary bosses, master powerful abilities, upgrade your skills, and conquer the realm!
+            Step into a realm of legendary beasts and ancient magic! Build your warrior, master devastating abilities,
+            and climb the ranks to become the mightiest hero the kingdom has ever known.
         </p>
         <div class="btn-group">
-            <a href="https://discord.com/oauth2/authorize?client_id=1525535092120879135&permissions=268486656&scope=bot%20applications.commands" class="btn btn-primary">
+            <a href="https://discord.com/oauth2/authorize?client_id=1525535092120879135&permissions=268486656&scope=bot%20applications.commands" class="btn">
                 ⚡ Add to Discord
             </a>
-            <a href="https://medivalfight.alwaysdata.net" class="btn btn-secondary">
+            <a href="https://medivalfight.alwaysdata.net" class="btn">
                 📜 View Dashboard
             </a>
         </div>
@@ -277,28 +282,86 @@
 
     <!-- Features Section -->
     <section class="section">
-        <h2 class="section-title">✨ Epic Features</h2>
+        <h2 class="section-title">✨ What Awaits You</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">👹</div>
                 <h3 class="feature-title">Legendary Bosses</h3>
-                <p class="feature-desc">Battle 15 unique bosses with varying difficulty tiers and devastating attacks!</p>
+                <p class="feature-desc">15 unique bosses from Golem to Void Destroyer, each with 4 difficulty tiers and signature attacks!</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📜</div>
-                <h3 class="feature-title">Powerful Abilities</h3>
-                <p class="feature-desc">Unlock and master 16 abilities from 4 different categories!</p>
+                <h3 class="feature-title">16 Unique Abilities</h3>
+                <p class="feature-desc">Four categories of abilities: Strength, Wealth, Agility, Composure! Buy them with coins or stat costs!</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⬆️</div>
-                <h3 class="feature-title">Ability Upgrades</h3>
-                <p class="feature-desc">Upgrade your abilities up to level 15 for massive power boosts!</p>
+                <h3 class="feature-title">Deep Upgrade System</h3>
+                <p class="feature-desc">Upgrade every ability up to level 15! Each upgrade costs points and makes your abilities exponentially stronger!</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">💪</div>
-                <h3 class="feature-title">Custom Stats</h3>
-                <p class="feature-desc">Distribute points to strength, wealth, agility, and composure!</p>
+                <h3 class="feature-title">Custom Stat System</h3>
+                <p class="feature-desc">Distribute points to Strength (damage), Wealth (coins), Agility (dodge), and Composure (HP)!</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Detailed Explanations Section -->
+    <section class="section">
+        <h2 class="section-title">📖 How It All Works</h2>
+        
+        <div class="detailed-section">
+            <h3 class="detailed-title">⚔️ Battle System</h3>
+            <p class="detailed-text">
+                Every boss fight is a turn-based clash of might! You and the boss take turns attacking. Use your abilities to turn the tide!
+                Bosses have unique special attacks that trigger periodically—stay vigilant!
+            </p>
+        </div>
+        
+        <div class="detailed-section">
+            <h3 class="detailed-title">📜 Ability System</h3>
+            <p class="detailed-text">
+                Unlock 16 powerful abilities divided into 4 categories: Strength, Wealth, Agility, and Composure. Each ability can be purchased
+                either with coins earned from boss battles or with specific stat points—choose your path carefully!
+            </p>
+            <p class="detailed-text">
+                Abilities are more than just commands—they are your weapons! Use <code>/fire-attack</code>, <code>/berserk</code>, 
+                <code>/shadow-strike</code>, and many more during battles to devastate your foes!
+            </p>
+        </div>
+        
+        <div class="detailed-section">
+            <h3 class="detailed-title">⬆️ Ability Upgrades</h3>
+            <p class="detailed-text">
+                This is where the true depth lies! Every ability you own can be upgraded up to level 15! Each upgrade costs attribute points,
+                with the cost increasing by 30 points per level. For example, upgrading from level 1 to 2 costs 30 points, level 2 to 3 costs 60,
+                and so on!
+            </p>
+            <p class="detailed-text">
+                Upgrades drastically enhance your abilities: more damage, higher healing, better buffs, more reliable effects—this system
+                gives you endless goals to work towards, keeping you engaged for hours on end!
+            </p>
+        </div>
+        
+        <div class="detailed-section">
+            <h3 class="detailed-title">💪 Stat Point System</h3>
+            <p class="detailed-text">
+                Your profile starts with 100 free points to distribute!
+            </p>
+            <ul style="margin-left: 1.5rem; color: #d0c0a4; line-height: 1.8;">
+                <li><strong>Strength</strong>: Increases your damage dealt in battle</li>
+                <li><strong>Wealth</strong>: Earn more coins from boss victories, unlocks wealth-based abilities</li>
+                <li><strong>Agility</strong>: Higher chance to dodge boss attacks</li>
+                <li><strong>Composure</strong>: Boosts your maximum HP (Base HP is 25, +5 HP per point)</li>
+            </ul>
+        </div>
+        
+        <div class="detailed-section">
+            <h3 class="detailed-title">🪙 Coin System</h3>
+            <p class="detailed-text">
+                Coins are earned by defeating bosses! Your Wealth stat increases your coin earnings. Use coins to buy new abilities or shop items!
+            </p>
         </div>
     </section>
 
@@ -413,14 +476,14 @@
     </footer>
 
     <script>
-        // Create floating particles
+        // Create subtle floating embers
         const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
             particle.classList.add('particle');
             particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 15 + 's';
-            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 15) + 's';
             particlesContainer.appendChild(particle);
         }
     </script>
