@@ -35,6 +35,7 @@ passport.use(new DiscordStrategy({
     scope: ['identify', 'guilds']
 }, (accessToken, refreshToken, profile, done) => {
     // Attach tokens to profile so we can use them later!
+    console.log('[DEBUG] Discord OAuth success, access token length:', accessToken?.length);
     profile.accessToken = accessToken;
     profile.refreshToken = refreshToken;
     done(null, profile);
@@ -86,6 +87,30 @@ app.post('/api/feedback', async (req, res) => {
 
 // Async function to send Discord notifications without blocking
 async function sendDiscordFeedback(userId, username, feedbackText) {
+    console.log('[DEBUG] sendDiscordFeedback called for user:', username);
+    console.log('[DEBUG] DISCORD_TOKEN exists:', !!process.env.DISCORD_TOKEN);
+    console.log('[DEBUG] DISCORD_TOKEN length:', process.env.DISCORD_TOKEN?.length);
+    
+    // First validate the bot token
+    try {
+        const validateResponse = await fetch('https://discord.com/api/v10/users/@me', {
+            headers: {
+                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
+            }
+        });
+        console.log('[DEBUG] Bot token validation response status:', validateResponse.status);
+        if (!validateResponse.ok) {
+            const errorText = await validateResponse.text();
+            console.error('[DEBUG] Bot token validation failed:', errorText);
+            return; // Don't try to send if token is invalid
+        }
+        const botUser = await validateResponse.json();
+        console.log('[DEBUG] Bot user:', botUser.username);
+    } catch (error) {
+        console.error('[DEBUG] Bot token validation error:', error);
+        return;
+    }
+    
     const sendFeedback = async (destinationId, isChannel = true) => {
         const url = isChannel 
             ? `https://discord.com/api/v10/channels/${destinationId}/messages`
@@ -102,7 +127,12 @@ async function sendDiscordFeedback(userId, username, feedbackText) {
                     },
                     body: JSON.stringify({ recipient_id: destinationId })
                 });
-                if (!dmResponse.ok) return;
+                console.log(`[DEBUG] DM channel creation response status:`, dmResponse.status);
+                if (!dmResponse.ok) {
+                    const errorText = await dmResponse.text();
+                    console.error(`[DEBUG] DM channel creation failed:`, errorText);
+                    return;
+                }
                 const dmData = await dmResponse.json();
                 targetUrl = `https://discord.com/api/v10/channels/${dmData.id}/messages`;
             }
@@ -121,6 +151,7 @@ async function sendDiscordFeedback(userId, username, feedbackText) {
                 ]
             };
             
+            console.log(`[DEBUG] Sending to ${isChannel ? 'channel' : 'DM'}:`, targetUrl);
             const messageResponse = await fetch(targetUrl, {
                 method: 'POST',
                 headers: {
@@ -130,16 +161,20 @@ async function sendDiscordFeedback(userId, username, feedbackText) {
                 body: JSON.stringify(messagePayload)
             });
             
+            console.log(`[DEBUG] Message response status:`, messageResponse.status);
             if (messageResponse.ok) {
-                console.log(`[DEBUG] Feedback sent to ${isChannel ? 'channel' : 'DM'}`);
+                console.log(`[DEBUG] Feedback sent to ${isChannel ? 'channel' : 'DM'} successfully`);
+            } else {
+                const errorText = await messageResponse.text();
+                console.error(`[DEBUG] Failed to send message:`, errorText);
             }
         } catch (error) {
             console.error(`[DEBUG] Error sending feedback to ${isChannel ? 'channel' : 'DM'}:`, error);
         }
     };
     
+    // Only send to channel since bot is confirmed to be there
     await sendFeedback('1527647475215896776', true);
-    await sendFeedback('1324354578338025533', false);
 }
 
 app.get('/api/battle-log/:code', (req, res) => {

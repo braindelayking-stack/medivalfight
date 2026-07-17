@@ -120,6 +120,12 @@ async function loadServerConfig() {
     if (!currentServer) return;
     const response = await fetch(`/api/guilds/${currentServer.id}/config`);
     if (!response.ok) {
+        const data = await response.json();
+        if (data.needsReauth) {
+            alert('Your Discord session has expired. Please log in again.');
+            window.location.href = '/auth/discord';
+            return;
+        }
         alert('Failed to load server config!');
         return;
     }
@@ -194,6 +200,12 @@ async function loadServerRoleShop() {
     if (!currentServer) return;
     const response = await fetch(`/api/guilds/${currentServer.id}/role-shop`);
     if (!response.ok) {
+        const data = await response.json();
+        if (data.needsReauth) {
+            alert('Your Discord session has expired. Please log in again.');
+            window.location.href = '/auth/discord';
+            return;
+        }
         alert('Failed to load role shop!');
         return;
     }
