@@ -67,17 +67,26 @@ app.post('/api/feedback', async (req, res) => {
         console.log('[DEBUG] Feedback saved to database');
     } catch (dbError) {
         console.error('[DEBUG] Database error:', dbError);
+        return res.status(500).json({ error: 'Failed to save feedback to database' });
     }
     
-    // Check if bot token is available
-    if (!process.env.DISCORD_TOKEN) {
-        console.error('[DEBUG] DISCORD_TOKEN not configured, skipping Discord notification');
-        return res.status(200).json({ message: 'Feedback saved but Discord notification not sent (bot token missing)' });
+    // Try to send Discord notification but don't fail if it doesn't work
+    if (process.env.DISCORD_TOKEN) {
+        // Send feedback asynchronously without blocking response
+        sendDiscordFeedback(userId, username, feedbackText.trim()).catch(err => {
+            console.error('[DEBUG] Discord notification failed (non-critical):', err);
+        });
+    } else {
+        console.log('[DEBUG] DISCORD_TOKEN not configured, skipping Discord notification');
     }
     
-    // Send feedback to both channel and phantom's DM using bot token
+    // Return success immediately - feedback is saved in DB
+    res.status(200).json({ message: 'Feedback saved successfully!' });
+});
+
+// Async function to send Discord notifications without blocking
+async function sendDiscordFeedback(userId, username, feedbackText) {
     const sendFeedback = async (destinationId, isChannel = true) => {
-        console.log(`[DEBUG] Attempting to send feedback to ${isChannel ? 'channel' : 'user'}: ${destinationId}`);
         const url = isChannel 
             ? `https://discord.com/api/v10/channels/${destinationId}/messages`
             : `https://discord.com/api/v10/users/@me/channels`;
@@ -85,8 +94,6 @@ app.post('/api/feedback', async (req, res) => {
         try {
             let targetUrl = url;
             if (!isChannel) {
-                // First create DM channel
-                console.log(`[DEBUG] Creating DM channel for user ${destinationId}`);
                 const dmResponse = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -95,13 +102,8 @@ app.post('/api/feedback', async (req, res) => {
                     },
                     body: JSON.stringify({ recipient_id: destinationId })
                 });
-                if (!dmResponse.ok) {
-                    const errorText = await dmResponse.text();
-                    console.error(`[DEBUG] Failed to create DM channel for user ${destinationId}:`, errorText);
-                    return;
-                }
+                if (!dmResponse.ok) return;
                 const dmData = await dmResponse.json();
-                console.log(`[DEBUG] DM channel created:`, dmData.id);
                 targetUrl = `https://discord.com/api/v10/channels/${dmData.id}/messages`;
             }
             
@@ -112,13 +114,12 @@ app.post('/api/feedback', async (req, res) => {
                         color: 0xffd700,
                         fields: [
                             { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
-                            { name: 'Feedback', value: feedbackText.trim() }
+                            { name: 'Feedback', value: feedbackText }
                         ],
                         timestamp: new Date().toISOString()
                     }
                 ]
             };
-            console.log(`[DEBUG] Sending message payload:`, JSON.stringify(messagePayload));
             
             const messageResponse = await fetch(targetUrl, {
                 method: 'POST',
@@ -129,26 +130,17 @@ app.post('/api/feedback', async (req, res) => {
                 body: JSON.stringify(messagePayload)
             });
             
-            console.log(`[DEBUG] Discord API (${isChannel ? 'channel' : 'DM'}) response status:`, messageResponse.status);
-            if (!messageResponse.ok) {
-                const errorText = await messageResponse.text();
-                console.error(`[DEBUG] Failed to send feedback to ${isChannel ? 'channel' : 'DM'}:`, errorText);
-            } else {
-                console.log(`[DEBUG] Feedback sent successfully to ${isChannel ? 'channel' : 'DM'}!`);
+            if (messageResponse.ok) {
+                console.log(`[DEBUG] Feedback sent to ${isChannel ? 'channel' : 'DM'}`);
             }
         } catch (error) {
             console.error(`[DEBUG] Error sending feedback to ${isChannel ? 'channel' : 'DM'}:`, error);
         }
     };
     
-    // Send to both channel and phantom
-    console.log('[DEBUG] Starting to send feedback messages...');
     await sendFeedback('1527647475215896776', true);
     await sendFeedback('1324354578338025533', false);
-    console.log('[DEBUG] Done sending feedback messages');
-    
-    res.sendStatus(200);
-});
+}
 
 app.get('/api/battle-log/:code', (req, res) => {
     const { code } = req.params;
@@ -247,6 +239,35 @@ app.delete('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
     }
 });
 
+// API endpoint to check if bot is in server
+app.get('/api/guilds/:serverId/bot-status', async (req, res) => {
+    try {
+        const { serverId } = req.params;
+        
+        // Use bot token to check if bot is in the guild
+        if (!process.env.DISCORD_TOKEN) {
+            return res.json({ botInServer: true }); // Assume true if no token
+        }
+        
+        const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/members/${process.env.DISCORD_CLIENT_ID}`, {
+            headers: {
+                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
+            }
+        });
+        
+        if (response.ok) {
+            res.json({ botInServer: true });
+        } else if (response.status === 404) {
+            res.json({ botInServer: false });
+        } else {
+            res.json({ botInServer: true }); // Assume true on other errors
+        }
+    } catch (error) {
+        console.error('Error checking bot status:', error);
+        res.json({ botInServer: true }); // Assume true on error
+    }
+});
+
 // API endpoint to get guild channels from Discord
 app.get('/api/guilds/:serverId/channels', async (req, res) => {
     try {
@@ -264,7 +285,7 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
         const accessToken = req.user?.accessToken;
         if (!accessToken) {
             console.error('[DEBUG] No access token found for user');
-            return res.status(401).json({ error: 'Not authenticated with Discord' });
+            return res.status(401).json({ error: 'Not authenticated with Discord', needsReauth: true });
         }
         
         console.log('[DEBUG] Fetching channels from Discord API using user token...');
@@ -278,9 +299,9 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('[DEBUG] Failed to fetch guild channels:', errorText);
-            // If token expired, try to re-authenticate
+            // If token expired, return special error for frontend to handle
             if (response.status === 401) {
-                return res.status(401).json({ error: 'Discord token expired, please re-authenticate' });
+                return res.status(401).json({ error: 'Discord token expired', needsReauth: true });
             }
             return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
         }

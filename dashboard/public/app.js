@@ -72,10 +72,48 @@ async function saveProfile() {
 async function openServerManagement(serverId, serverName) {
     currentServer = { id: serverId, name: serverName };
     document.getElementById('server-name').textContent = serverName;
+    
+    // Check if bot is in the server
+    const botInServer = await checkBotInServer(serverId);
+    if (!botInServer) {
+        showBotInvitePopup(serverName);
+        return;
+    }
+    
     await loadServerRoleShop();
     await loadServerConfig();
     await loadServerChannels();
     showPage('server-management');
+}
+
+async function checkBotInServer(serverId) {
+    try {
+        // Check if bot is in the guild by trying to fetch bot member
+        const response = await fetch(`/api/guilds/${serverId}/bot-status`);
+        if (response.ok) {
+            const data = await response.json();
+            return data.botInServer;
+        }
+        return true; // Assume bot is in server if we can't check
+    } catch (error) {
+        console.error('Error checking bot status:', error);
+        return true; // Assume bot is in server on error
+    }
+}
+
+function showBotInvitePopup(serverName) {
+    const popup = document.createElement('div');
+    popup.className = 'bot-invite-popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <h3>⚔️ Bot Not in Server</h3>
+            <p>The Medieval Fight bot is not in <strong>${serverName}</strong> yet!</p>
+            <p>You need to invite the bot to manage server settings.</p>
+            <a href="https://discord.com/oauth2/authorize?client_id=1525535092120879135&permissions=268520448&scope=bot%20applications.commands&guild_id=${currentServer.id}" target="_blank" class="medieval-btn">🚀 Invite Bot</a>
+            <button onclick="this.closest('.bot-invite-popup').remove()" class="medieval-btn" style="margin-top: 10px;">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
 }
 
 async function loadServerConfig() {
@@ -99,6 +137,12 @@ async function loadServerChannels() {
     if (!currentServer) return;
     const response = await fetch(`/api/guilds/${currentServer.id}/channels`);
     if (!response.ok) {
+        const data = await response.json();
+        if (data.needsReauth) {
+            alert('Your Discord session has expired. Please log in again.');
+            window.location.href = '/auth/discord';
+            return;
+        }
         alert('Failed to load server channels!');
         return;
     }
