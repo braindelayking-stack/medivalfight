@@ -129,10 +129,11 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
     try {
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
             headers: {
-                'Authorization': `Bearer ${req.user.accessToken}`
+                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
             }
         });
         if (!response.ok) {
+            console.error('Failed to fetch guild channels:', await response.text());
             return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
         }
         const channels = await response.json();
