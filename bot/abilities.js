@@ -128,26 +128,26 @@ const abilityUpgradeConfigs = {
 
 const abilities = [
     // Weak Abilities (Existing)
-    { id: 'fire_attack', name: 'Fire Attack', category: 'Strength', costType: 'strength', cost: 20, description: '🔥 Shoot a fireball dealing 10 base damage', cooldown: 3000 },
-    { id: 'water_attack', name: 'Water Attack', category: 'Strength', costType: 'strength', cost: 20, description: '💧 Shoot a waterball dealing 10 base damage', cooldown: 3000 },
-    { id: 'earth_attack', name: 'Earth Attack', category: 'Strength', costType: 'strength', cost: 20, description: '🌍 Shoot an earthball dealing 10 base damage', cooldown: 3000 },
-    { id: 'air_attack', name: 'Air Attack', category: 'Strength', costType: 'strength', cost: 20, description: '💨 Shoot an airball dealing 10 base damage', cooldown: 3000 },
-    { id: 'sacrifice', name: 'Sacrifice', category: 'Wealth', costType: 'wealth', cost: 20, description: '💰 Spend wealth to heal yourself during battle', cooldown: 3000 },
-    { id: 'dodge', name: 'Dodge', category: 'Agility', costType: 'agility', cost: 20, description: '🏃 Dodge the next attack with 50% chance', cooldown: 3000 },
-    { id: 'attack_boost', name: 'Attack Boost', category: 'Agility', costType: 'agility', cost: 20, description: '⚡ Boost your next attack by 2x', cooldown: 3000 },
-    { id: 'composure_defense', name: 'Composure Defense', category: 'Composure', costType: 'composure', cost: 20, description: '🧘 Reduce damage by 50% when below 20% HP', cooldown: 3000 },
+    { id: 'fire_attack', name: 'Fire Attack', category: 'Strength', costType: 'strength', cost: 20, baseDamage: 10, description: '🔥 Shoot a fireball dealing 10 base damage', cooldown: 3000 },
+    { id: 'water_attack', name: 'Water Attack', category: 'Strength', costType: 'strength', cost: 20, baseDamage: 10, description: '💧 Shoot a waterball dealing 10 base damage', cooldown: 3000 },
+    { id: 'earth_attack', name: 'Earth Attack', category: 'Strength', costType: 'strength', cost: 20, baseDamage: 10, description: '🌍 Shoot an earthball dealing 10 base damage', cooldown: 3000 },
+    { id: 'air_attack', name: 'Air Attack', category: 'Strength', costType: 'strength', cost: 20, baseDamage: 10, description: '💨 Shoot an airball dealing 10 base damage', cooldown: 3000 },
+    { id: 'sacrifice', name: 'Sacrifice', category: 'Wealth', costType: 'wealth', cost: 20, baseDamage: 0, healAmount: 20, description: '💰 Spend wealth to heal yourself during battle', cooldown: 3000 },
+    { id: 'dodge', name: 'Dodge', category: 'Agility', costType: 'agility', cost: 20, baseDamage: 0, description: '🏃 Dodge the next attack with 50% chance', cooldown: 3000 },
+    { id: 'attack_boost', name: 'Attack Boost', category: 'Agility', costType: 'agility', cost: 20, baseDamage: 0, description: '⚡ Boost your next attack by 2x', cooldown: 3000 },
+    { id: 'composure_defense', name: 'Composure Defense', category: 'Composure', costType: 'composure', cost: 20, baseDamage: 0, description: '🧘 Reduce damage by 50% when below 20% HP', cooldown: 3000 },
 
     // Mid-Tier Abilities
-    { id: 'smash', name: 'Smash', category: 'Strength', costType: 'strength', cost: 80, description: '💥 30 base damage, shatters boss shields, but you take 1.2x damage next hit', cooldown: 5000 },
-    { id: 'bribe', name: 'Bribe', category: 'Wealth', costType: 'wealth', cost: 90, description: '💵 Spend 50 wealth to skip the boss\'s next attack', cooldown: 8000 },
-    { id: 'quick_step', name: 'Quick Step', category: 'Agility', costType: 'agility', cost: 85, description: '🏃‍♂️ Dodge the next boss attack and counter for 15 damage', cooldown: 6000 },
-    { id: 'iron_will', name: 'Iron Will', category: 'Composure', costType: 'composure', cost: 80, description: '🛡️ Reduce all incoming damage by 50% for 5 seconds', cooldown: 10000 },
+    { id: 'smash', name: 'Smash', category: 'Strength', costType: 'strength', cost: 80, baseDamage: 30, description: '💥 30 base damage, shatters boss shields, but you take 1.2x damage next hit', cooldown: 5000 },
+    { id: 'bribe', name: 'Bribe', category: 'Wealth', costType: 'wealth', cost: 90, baseDamage: 0, description: '💵 Spend 50 wealth to skip the boss\'s next attack', cooldown: 8000 },
+    { id: 'quick_step', name: 'Quick Step', category: 'Agility', costType: 'agility', cost: 85, baseDamage: 15, description: '🏃‍♂️ Dodge the next boss attack and counter for 15 damage', cooldown: 6000 },
+    { id: 'iron_will', name: 'Iron Will', category: 'Composure', costType: 'composure', cost: 80, baseDamage: 0, description: '🛡️ Reduce all incoming damage by 50% for 5 seconds', cooldown: 10000 },
 
     // Strong Abilities
-    { id: 'berserk', name: 'Berserk', category: 'Strength', costType: 'strength', cost: 200, description: '🔥 Sacrifice 20% current HP to deal 50 base damage', cooldown: 12000 },
-    { id: 'golden_touch', name: 'Golden Touch', category: 'Wealth', costType: 'wealth', cost: 220, description: '✨ Convert 30 wealth into 30 points AND deal 25 damage', cooldown: 10000 },
-    { id: 'shadow_strike', name: 'Shadow Strike', category: 'Agility', costType: 'agility', cost: 210, description: '👤 40 damage and stun the boss for 2 seconds', cooldown: 11000 },
-    { id: 'last_stand', name: 'Last Stand', category: 'Composure', costType: 'composure', cost: 215, description: '⚔️ If below 20% HP: heal to 50% max HP and 2x attack boost (once per fight)', cooldown: 999999999 } // Long cooldown since one-time use
+    { id: 'berserk', name: 'Berserk', category: 'Strength', costType: 'strength', cost: 200, baseDamage: 50, description: '🔥 Sacrifice 20% current HP to deal 50 base damage', cooldown: 12000 },
+    { id: 'golden_touch', name: 'Golden Touch', category: 'Wealth', costType: 'wealth', cost: 220, baseDamage: 25, description: '✨ Convert 30 wealth into 30 points AND deal 25 damage', cooldown: 10000 },
+    { id: 'shadow_strike', name: 'Shadow Strike', category: 'Agility', costType: 'agility', cost: 210, baseDamage: 40, description: '👤 40 damage and stun the boss for 2 seconds', cooldown: 11000 },
+    { id: 'last_stand', name: 'Last Stand', category: 'Composure', costType: 'composure', cost: 215, baseDamage: 0, description: '⚔️ If below 20% HP: heal to 50% max HP and 2x attack boost (once per fight)', cooldown: 999999999 } // Long cooldown since one-time use
 ];
 
 module.exports = { abilities, categoryConfig, abilityUpgradeConfigs };

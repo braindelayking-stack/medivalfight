@@ -51,7 +51,6 @@ app.get('/feedback', (req, res) => res.sendFile(path.join(__dirname, 'public', '
 app.post('/api/feedback', async (req, res) => {
     console.log('[DEBUG] Feedback endpoint hit!');
     console.log('[DEBUG] Request body:', req.body);
-    console.log('[DEBUG] DISCORD_TOKEN exists:', !!process.env.DISCORD_TOKEN);
     
     const { feedbackText } = req.body;
     if (!feedbackText || feedbackText.trim() === '') {
@@ -70,7 +69,13 @@ app.post('/api/feedback', async (req, res) => {
         console.error('[DEBUG] Database error:', dbError);
     }
     
-    // Send feedback to both channel and phantom's DM
+    // Check if bot token is available
+    if (!process.env.DISCORD_TOKEN) {
+        console.error('[DEBUG] DISCORD_TOKEN not configured, skipping Discord notification');
+        return res.status(200).json({ message: 'Feedback saved but Discord notification not sent (bot token missing)' });
+    }
+    
+    // Send feedback to both channel and phantom's DM using bot token
     const sendFeedback = async (destinationId, isChannel = true) => {
         console.log(`[DEBUG] Attempting to send feedback to ${isChannel ? 'channel' : 'user'}: ${destinationId}`);
         const url = isChannel 
@@ -255,10 +260,17 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
             return res.sendStatus(403);
         }
         
-        console.log('[DEBUG] Fetching channels from Discord API...');
+        // Use user's OAuth access token instead of bot token
+        const accessToken = req.user?.accessToken;
+        if (!accessToken) {
+            console.error('[DEBUG] No access token found for user');
+            return res.status(401).json({ error: 'Not authenticated with Discord' });
+        }
+        
+        console.log('[DEBUG] Fetching channels from Discord API using user token...');
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
             headers: {
-                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
+                'Authorization': `Bearer ${accessToken}`
             }
         });
         
@@ -266,6 +278,10 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('[DEBUG] Failed to fetch guild channels:', errorText);
+            // If token expired, try to re-authenticate
+            if (response.status === 401) {
+                return res.status(401).json({ error: 'Discord token expired, please re-authenticate' });
+            }
             return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
         }
         
