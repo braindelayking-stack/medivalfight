@@ -10,6 +10,14 @@ module.exports = {
 
         const userId = message.author.id;
         const serverId = message.guild.id;
+        const channelId = message.channel.id;
+
+        // Check tracked channels
+        const trackedChannels = db.prepare('SELECT channel_id FROM server_tracked_channels WHERE server_id = ?').all(serverId);
+        if (trackedChannels.length > 0) {
+            const isTracked = trackedChannels.some(c => c.channel_id === channelId);
+            if (!isTracked) return;
+        }
 
         const wordCount = message.content.trim().split(/\s+/).filter(word => word.length > 0).length;
         let pointsToAdd;
@@ -26,8 +34,8 @@ module.exports = {
             db.prepare('UPDATE users SET points = points + ? WHERE user_id = ? AND server_id = ?').run(pointsToAdd, userId, serverId);
         } else {
             db.prepare(`
-                INSERT INTO users (user_id, server_id, game_username, game_avatar, points, coins, strength, wealth, health, agility, composure, total_points_spent, wins, boss_wins)
-                VALUES (?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                INSERT INTO users (user_id, server_id, game_username, game_avatar, points, coins, strength, wealth, agility, composure, total_points_spent, wins, boss_wins)
+                VALUES (?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0)
             `).run(userId, serverId, message.author.username, message.author.displayAvatarURL(), pointsToAdd);
         }
     }
