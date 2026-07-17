@@ -1,14 +1,13 @@
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const db = require('../../database/db');
-const { assignQuestsToUser, giveItemToUser, giveTitleToUser, getTodayUTC, getWeekStartUTC } = require('../utils');
+const { assignQuestsToUser, giveItemToUser, giveTitleToUser, getTodayUTC, getWeekStartUTC, updateAchievementProgress } = require('../utils');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('quest')
         .setDescription('Quest commands!')
-        .addSubcommand(sub => sub.setName('list').setDescription('List your available quests'))
-        .addSubcommand(sub => sub.setName('progress').setDescription('Show your quest progress'))
+        .addSubcommand(sub => sub.setName('list').setDescription('List your available quests and progress'))
         .addSubcommand(sub => sub.setName('claim').setDescription('Claim rewards for completed quests!')),
     async execute(interaction) {
         await interaction.deferReply();
@@ -24,7 +23,7 @@ module.exports = {
         }
         assignQuestsToUser(userId, serverId);
 
-        if (subcommand === 'list' || subcommand === 'progress') {
+        if (subcommand === 'list') {
             // Get all user quests
             const today = getTodayUTC();
             const weekStart = getWeekStartUTC();

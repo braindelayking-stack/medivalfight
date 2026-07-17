@@ -329,6 +329,39 @@ module.exports = {
                 return attackInfo;
             }).join('\n');
 
+            // Define drop tables
+            const dropTables = {
+                easy: [
+                    { itemId: 1, chance: 0.1 }
+                ],
+                mid: [
+                    { itemId: 2, chance: 0.08 }, 
+                    { itemId:7, chance: 0.03 }, 
+                    { itemId:8, chance:0.03 } 
+                ],
+                strong: [
+                    { itemId:3, chance: 0.05 }, 
+                    { itemId:4, chance:0.05 }, 
+                    { itemId:9, chance:0.07 }, 
+                    { itemId:10, chance:0.03 } 
+                ],
+                very_strong: [
+                    { itemId:5, chance: 0.03 }, 
+                    { itemId:10, chance:0.04 }, 
+                    { itemId:6, chance:0.01 } 
+                ]
+            };
+
+            // Prepare drop field
+            let dropList = '';
+            const drops = dropTables[boss.difficulty];
+            for (const drop of drops) {
+                const item = db.prepare('SELECT * FROM items WHERE id = ?').get(drop.itemId);
+                if (item) {
+                    dropList += `• ${item.name} - ${Math.round(drop.chance*100)}% chance\n`;
+                }
+            }
+            
             const embed = new EmbedBuilder()
                 .setColor(embedColor)
                 .setTitle(`👹 ${boss.name}`)
@@ -339,6 +372,10 @@ module.exports = {
                     { name: '🗡️ Attacks', value: attackList, inline: false }
                 )
                 .setThumbnail('https://cdn-icons-png.flaticon.com/512/2232/2232688.png');
+            
+            if (dropList) {
+                embed.addFields({ name: '📦 Possible Drops', value: dropList, inline: false });
+            }
             
             await interaction.editReply({ embeds: [embed] });
             return;

@@ -73,10 +73,11 @@ module.exports = {
                     name: '📅 New Features!',
                     value: `
 - \`/daily\`: Claim your daily reward with streak bonuses!
-- \`/quest list\`: View daily, weekly, and repeatable quests!
-- \`/quest progress\`: Check your quest progress!
+- \`/quest list\`: View daily, weekly, and repeatable quests (includes progress)!
 - \`/quest claim\`: Claim rewards for completed quests!
 - \`/inventory\`: View your items and titles!
+- \`/item inspect\`: Inspect any item to see what it does and how to get it!
+- \`/title inspect\`: Inspect any title to see how to get it!
 - \`/achievements\`: View your achievements and claim rewards!
                     `,
                     inline: false
