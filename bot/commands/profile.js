@@ -1,6 +1,7 @@
 
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const db = require('../../database/db');
+const { giveTitleToUser } = require('../utils');
 
 const stats = ['strength', 'wealth', 'health', 'agility', 'composure'];
 
@@ -35,10 +36,22 @@ function createEmbed(userData, user) {
     const xpBar = '█'.repeat(filledLength) + '░'.repeat(xpBarLength - filledLength);
     const maxHP = calculatePlayerMaxHP(userData);
 
+    let titleText = '';
+    if (userData.equipped_title) {
+        const title = db.prepare('SELECT * FROM titles WHERE id = ?').get(userData.equipped_title);
+        if (title) titleText = `[${title.name}] `;
+    }
+
+    let passiveText = '';
+    if (userData.equipped_passive_item) {
+        const item = db.prepare('SELECT * FROM items WHERE id = ?').get(userData.equipped_passive_item);
+        if (item) passiveText = `🎒 Equipped: ${item.name}`;
+    }
+
     const embed = new EmbedBuilder()
         .setColor('#FFD700')
         .setAuthor({ 
-            name: userData.game_username || user.username, 
+            name: `${titleText}${userData.game_username || user.username}`, 
             iconURL: userData.game_avatar || user.displayAvatarURL(),
             url: 'https://example.com'
         })
@@ -64,7 +77,7 @@ function createEmbed(userData, user) {
         )
         .setTimestamp()
         .setFooter({ 
-            text: 'Use the buttons below to upgrade your attributes! May your sword stay sharp!', 
+            text: 'Use the buttons below to upgrade your attributes! May your sword stay sharp!' + (passiveText ? ` | ${passiveText}` : ''), 
             iconURL: user.displayAvatarURL()
         });
     return embed;
@@ -120,6 +133,10 @@ module.exports = {
                 INSERT INTO users (user_id, server_id, game_username, game_avatar, points, coins, strength, wealth, health, agility, composure, total_points_spent, wins, boss_wins)
                 VALUES (?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             `).run(userId, serverId, interaction.user.username, interaction.user.displayAvatarURL());
+            // Give first title and achievement
+            giveTitleToUser(userId, serverId, 1);
+            db.prepare('UPDATE users SET equipped_title = 1 WHERE user_id = ? AND server_id = ?').run(userId, serverId);
+            db.prepare('INSERT INTO user_achievements (user_id, server_id, achievement_id, progress, unlocked, claimed) VALUES (?, ?, ?, 1, 1, 1)').run(userId, serverId, 1);
             userData = db.prepare('SELECT * FROM users WHERE user_id = ? AND server_id = ?').get(userId, serverId);
         }
 

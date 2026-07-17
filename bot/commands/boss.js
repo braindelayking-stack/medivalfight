@@ -2,6 +2,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
 const db = require('../../database/db');
 const path = require('path');
+const { updateQuestProgress, giveItemToUser } = require('../utils');
 
 // Boss data with images and difficulty tiers
 const bosses = [
@@ -734,6 +735,7 @@ async function endBossFight(state, message, playerWon) {
     activeBossFights.delete(state.id);
 
     let coinReward = state.boss.reward; // Default to boss reward if no config
+    const itemsReceived = [];
     if (playerWon) {
         // Get server config for coin rewards
         const serverConfig = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(state.serverId);
@@ -743,9 +745,52 @@ async function endBossFight(state, message, playerWon) {
             else if (state.boss.difficulty === 'strong') coinReward = serverConfig.coins_strong;
             else if (state.boss.difficulty === 'very_strong') coinReward = serverConfig.coins_very_strong;
         }
-        // Apply wealth bonus (5% per wealth point? Wait let's see original code: let's check how wealth worked before! Wait in existing code didn't have wealth bonus, let's check. Oh wait, let's just keep it as is for now, then add the coins
+        // Update user
         db.prepare('UPDATE users SET coins = coins + ?, boss_wins = boss_wins + 1 WHERE user_id = ? AND server_id = ?').run(coinReward, state.userId, state.serverId);
-        state.log.push(`🎉 You defeated ${state.boss.name}! +${coinReward} coins!`);
+        
+        // Update quest progress
+        updateQuestProgress(state.userId, state.serverId, 'boss_defeat');
+        updateQuestProgress(state.userId, state.serverId, `boss_defeat_${state.boss.difficulty}`);
+        updateQuestProgress(state.userId, state.serverId, 'boss_defeat_specific', { boss_id: state.boss.id });
+
+        // Roll for item drops
+        // Define drop tables by difficulty
+        const dropTable = {
+            easy: [
+                { itemId: 1, chance: 0.1 } // Health potion 10%
+            ],
+            mid: [
+                { itemId: 2, chance: 0.08 }, // Large health potion 8%
+                { itemId: 7, chance: 0.03 }, // Coin magnet 3%
+                { itemId: 8, chance: 0.03 }  // Point magnet 3%
+            ],
+            strong: [
+                { itemId: 3, chance: 0.05 }, // Coin booster 5%
+                { itemId: 4, chance: 0.05 }, // Point booster 5%
+                { itemId: 9, chance: 0.07 }, // Lucky charm 7%
+                { itemId: 10, chance: 0.03 } // Durable armor 3%
+            ],
+            very_strong: [
+                { itemId: 5, chance: 0.03 }, // Ultimate health potion 3%
+                { itemId: 10, chance: 0.04 }, // Durable armor 4%
+                { itemId: 6, chance: 0.01 } // Double rewards 1%
+            ]
+        };
+
+        const drops = dropTable[state.boss.difficulty] || [];
+        for (const drop of drops) {
+            if (Math.random() < drop.chance) {
+                giveItemToUser(state.userId, state.serverId, drop.itemId);
+                const item = db.prepare('SELECT * FROM items WHERE id = ?').get(drop.itemId);
+                if (item) itemsReceived.push(item.name);
+            }
+        }
+
+        let logMsg = `🎉 You defeated ${state.boss.name}! +${coinReward} coins!`;
+        if (itemsReceived.length > 0) {
+            logMsg += `\n📦 Items received: ${itemsReceived.join(', ')}`;
+        }
+        state.log.push(logMsg);
     } else {
         state.log.push(`💀 You were defeated by ${state.boss.name}!`);
     }

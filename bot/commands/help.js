@@ -15,7 +15,7 @@ module.exports = {
             .addFields(
                 {
                     name: '🎯 Getting Started',
-                    value: 'Use `/profile create` to start your adventure!',
+                    value: 'Use `/profile` to start your adventure!',
                     inline: false
                 },
                 {
@@ -25,7 +25,7 @@ module.exports = {
 - **Wealth**: Get more coins after winning against bosses, grants wealth-based abilities
 - **Agility**: Improves your dodging of boss attacks
 - **Composure**: Enhances your maximum HP (Base HP = 25, +5 HP per point)
-- **Free Points**: Unassigned points you can distribute using \`/profile distribute\`
+- **Free Points**: Unassigned points you can distribute using \`/profile\`
                     `,
                     inline: false
                 },
@@ -37,19 +37,15 @@ module.exports = {
                 {
                     name: '📜 Profile Commands',
                     value: `
-- \`/profile create\`: Create your character
-- \`/profile view\`: View your stats, level, HP, coins, and owned abilities
-- \`/profile distribute\`: Spend free points to boost your stats
-- \`/profile reset\`: Reset your profile (WARNING: This deletes all progress!)
+- \`/profile\`: View and manage your character
                     `,
                     inline: false
                 },
                 {
                     name: '👹 Boss Commands',
                     value: `
-- \`/boss list\`: List all available bosses with difficulty tiers
-- \`/boss inspect\`: View detailed info about a boss before fighting
 - \`/boss fight\`: Battle a boss to earn coins and glory
+- \`/boss inspect\`: View detailed info about a boss before fighting
                     `,
                     inline: false
                 },
@@ -68,10 +64,20 @@ module.exports = {
                 {
                     name: '🏪 Shop Commands',
                     value: `
-- \`/shop buy\`: Buy items from the shop
-- \`/shop list\`: List all shop items
 - \`/role-shop buy\`: Buy roles from the role shop
 - \`/role-shop list\`: List available roles for purchase
+                    `,
+                    inline: false
+                },
+                {
+                    name: '📅 New Features!',
+                    value: `
+- \`/daily\`: Claim your daily reward with streak bonuses!
+- \`/quest list\`: View daily, weekly, and repeatable quests!
+- \`/quest progress\`: Check your quest progress!
+- \`/quest claim\`: Claim rewards for completed quests!
+- \`/inventory\`: View your items and titles!
+- \`/achievements\`: View your achievements and claim rewards!
                     `,
                     inline: false
                 },
