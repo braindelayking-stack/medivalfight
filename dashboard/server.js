@@ -169,43 +169,67 @@ app.put('/api/user/:serverId/:userId', (req, res) => {
 
 // Role Shop API Routes
 app.get('/api/guilds/:serverId/role-shop', (req, res) => {
-    const { serverId } = req.params;
-    const guild = req.user?.guilds?.find(g => g.id === serverId);
-    if (!guild || !(guild.permissions & 0x20)) {
-        return res.sendStatus(403);
+    try {
+        const { serverId } = req.params;
+        console.log('[DEBUG] Loading role shop for server:', serverId);
+        const guild = req.user?.guilds?.find(g => g.id === serverId);
+        if (!guild || !(guild.permissions & 0x20)) {
+            console.error('[DEBUG] No permission to access role shop');
+            return res.sendStatus(403);
+        }
+        const shopItems = db.prepare('SELECT * FROM server_role_shop WHERE server_id = ? ORDER BY slot').all(serverId);
+        console.log('[DEBUG] Role shop items:', shopItems);
+        res.json(shopItems);
+    } catch (error) {
+        console.error('[DEBUG] Error loading role shop:', error);
+        res.status(500).json({ error: 'Failed to load role shop' });
     }
-    const shopItems = db.prepare('SELECT * FROM server_role_shop WHERE server_id = ? ORDER BY slot').all(serverId);
-    res.json(shopItems);
 });
 
 app.put('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
-    const { serverId, slot } = req.params;
-    const { roleId, cost } = req.body;
-    const guild = req.user?.guilds?.find(g => g.id === serverId);
-    if (!guild || !(guild.permissions & 0x20)) {
-        return res.sendStatus(403);
+    try {
+        const { serverId, slot } = req.params;
+        const { roleId, cost } = req.body;
+        console.log('[DEBUG] Saving role shop slot:', slot, 'for server:', serverId, 'Data:', { roleId, cost });
+        const guild = req.user?.guilds?.find(g => g.id === serverId);
+        if (!guild || !(guild.permissions & 0x20)) {
+            console.error('[DEBUG] No permission to save role shop slot');
+            return res.sendStatus(403);
+        }
+        const slotNum = parseInt(slot);
+        if (slotNum < 1 || slotNum > 10) {
+            return res.status(400).json({ error: 'Slot must be 1-10' });
+        }
+        const existing = db.prepare('SELECT * FROM server_role_shop WHERE server_id = ? AND slot = ?').get(serverId, slotNum);
+        if (existing) {
+            db.prepare('UPDATE server_role_shop SET role_id = ?, cost = ? WHERE server_id = ? AND slot = ?').run(roleId, cost, serverId, slotNum);
+        } else {
+            db.prepare('INSERT INTO server_role_shop (server_id, role_id, cost, slot) VALUES (?, ?, ?, ?)').run(serverId, roleId, cost, slotNum);
+        }
+        console.log('[DEBUG] Role shop slot saved successfully');
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('[DEBUG] Error saving role shop slot:', error);
+        res.status(500).json({ error: 'Failed to save slot' });
     }
-    const slotNum = parseInt(slot);
-    if (slotNum < 1 || slotNum > 10) {
-        return res.status(400).json({ error: 'Slot must be 1-10' });
-    }
-    const existing = db.prepare('SELECT * FROM server_role_shop WHERE server_id = ? AND slot = ?').get(serverId, slotNum);
-    if (existing) {
-        db.prepare('UPDATE server_role_shop SET role_id = ?, cost = ? WHERE server_id = ? AND slot = ?').run(roleId, cost, serverId, slotNum);
-    } else {
-        db.prepare('INSERT INTO server_role_shop (server_id, role_id, cost, slot) VALUES (?, ?, ?, ?)').run(serverId, roleId, cost, slotNum);
-    }
-    res.sendStatus(200);
 });
 
 app.delete('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
-    const { serverId, slot } = req.params;
-    const guild = req.user?.guilds?.find(g => g.id === serverId);
-    if (!guild || !(guild.permissions & 0x20)) {
-        return res.sendStatus(403);
+    try {
+        const { serverId, slot } = req.params;
+        console.log('[DEBUG] Deleting role shop slot:', slot, 'for server:', serverId);
+        const guild = req.user?.guilds?.find(g => g.id === serverId);
+        if (!guild || !(guild.permissions & 0x20)) {
+            console.error('[DEBUG] No permission to delete role shop slot');
+            return res.sendStatus(403);
+        }
+        db.prepare('DELETE FROM server_role_shop WHERE server_id = ? AND slot = ?').run(serverId, parseInt(slot));
+        console.log('[DEBUG] Role shop slot deleted successfully');
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('[DEBUG] Error deleting role shop slot:', error);
+        res.status(500).json({ error: 'Failed to delete slot' });
     }
-    db.prepare('DELETE FROM server_role_shop WHERE server_id = ? AND slot = ?').run(serverId, parseInt(slot));
-    res.sendStatus(200);
 });
 
 // API endpoint to get guild channels from Discord
@@ -237,42 +261,60 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
 
 // Server Config API Routes
 app.get('/api/guilds/:serverId/config', (req, res) => {
-    const { serverId } = req.params;
-    const guild = req.user?.guilds?.find(g => g.id === serverId);
-    if (!guild || !(guild.permissions & 0x20)) {
-        return res.sendStatus(403);
+    try {
+        const { serverId } = req.params;
+        console.log('[DEBUG] Loading config for server:', serverId);
+        const guild = req.user?.guilds?.find(g => g.id === serverId);
+        if (!guild || !(guild.permissions & 0x20)) {
+            console.error('[DEBUG] No permission to access guild config');
+            return res.sendStatus(403);
+        }
+        let config = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(serverId);
+        if (!config) {
+            console.log('[DEBUG] No config found, creating default');
+            db.prepare('INSERT OR IGNORE INTO server_config (server_id) VALUES (?)').run(serverId);
+            config = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(serverId);
+        }
+        console.log('[DEBUG] Config found:', config);
+        const trackedChannels = db.prepare('SELECT channel_id FROM server_tracked_channels WHERE server_id = ?').all(serverId);
+        console.log('[DEBUG] Tracked channels:', trackedChannels);
+        res.json({ config, trackedChannels: trackedChannels.map(c => c.channel_id) });
+    } catch (error) {
+        console.error('[DEBUG] Error loading server config:', error);
+        res.status(500).json({ error: 'Failed to load server config' });
     }
-    let config = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(serverId);
-    if (!config) {
-        db.prepare('INSERT OR IGNORE INTO server_config (server_id) VALUES (?)').run(serverId);
-        config = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(serverId);
-    }
-    const trackedChannels = db.prepare('SELECT channel_id FROM server_tracked_channels WHERE server_id = ?').all(serverId);
-    res.json({ config, trackedChannels: trackedChannels.map(c => c.channel_id) });
 });
 
 app.put('/api/guilds/:serverId/config', (req, res) => {
-    const { serverId } = req.params;
-    const { coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels } = req.body;
-    const guild = req.user?.guilds?.find(g => g.id === serverId);
-    if (!guild || !(guild.permissions & 0x20)) {
-        return res.sendStatus(403);
+    try {
+        const { serverId } = req.params;
+        const { coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels } = req.body;
+        console.log('[DEBUG] Saving config for server:', serverId, 'Data:', { coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels });
+        const guild = req.user?.guilds?.find(g => g.id === serverId);
+        if (!guild || !(guild.permissions & 0x20)) {
+            console.error('[DEBUG] No permission to save guild config');
+            return res.sendStatus(403);
+        }
+        db.prepare(`
+            INSERT INTO server_config (server_id, coins_easy, coins_mid, coins_strong, coins_very_strong, updated_at)
+            VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(server_id) DO UPDATE SET
+                coins_easy = excluded.coins_easy,
+                coins_mid = excluded.coins_mid,
+                coins_strong = excluded.coins_strong,
+                coins_very_strong = excluded.coins_very_strong,
+                updated_at = CURRENT_TIMESTAMP
+        `).run(serverId, coinsEasy, coinsMid, coinsStrong, coinsVeryStrong);
+        db.prepare('DELETE FROM server_tracked_channels WHERE server_id = ?').run(serverId);
+        for (const channelId of (trackedChannels || [])) {
+            db.prepare('INSERT OR IGNORE INTO server_tracked_channels (server_id, channel_id) VALUES (?, ?)').run(serverId, channelId);
+        }
+        console.log('[DEBUG] Config saved successfully');
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('[DEBUG] Error saving server config:', error);
+        res.status(500).json({ error: 'Failed to save server config' });
     }
-    db.prepare(`
-        INSERT INTO server_config (server_id, coins_easy, coins_mid, coins_strong, coins_very_strong, updated_at)
-        VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-        ON CONFLICT(server_id) DO UPDATE SET
-            coins_easy = excluded.coins_easy,
-            coins_mid = excluded.coins_mid,
-            coins_strong = excluded.coins_strong,
-            coins_very_strong = excluded.coins_very_strong,
-            updated_at = CURRENT_TIMESTAMP
-    `).run(serverId, coinsEasy, coinsMid, coinsStrong, coinsVeryStrong);
-    db.prepare('DELETE FROM server_tracked_channels WHERE server_id = ?').run(serverId);
-    for (const channelId of (trackedChannels || [])) {
-        db.prepare('INSERT OR IGNORE INTO server_tracked_channels (server_id, channel_id) VALUES (?, ?)').run(serverId, channelId);
-    }
-    res.sendStatus(200);
 });
 
 app.use((req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
