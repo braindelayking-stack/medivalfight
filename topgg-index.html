@@ -3,359 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medieval Fight - Revive Your Discord Server</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Noto+Serif:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Medieval Fight - Discord RPG Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
         body {
-            font-family: 'Noto Serif', serif;
-            background: linear-gradient(135deg, #050302 0%, #1a0f0a 40%, #2d1b13 70%, #0a0604 100%);
-            color: #f5e9d3;
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a12 0%, #131324 50%, #1a1a30 100%);
+            color: #e8e8e8;
+            line-height: 1.6;
         }
         .container {
-            max-width: 1100px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 40px 20px;
         }
-        /* Animated Background Orbs */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.25;
-            z-index: -1;
-            animation: float 15s ease-in-out infinite;
-        }
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: #8b5a2b;
-            top: 10%;
-            left: -10%;
-        }
-        .orb-2 {
-            width: 350px;
-            height: 350px;
-            background: #c9a86c;
-            bottom: 10%;
-            right: -5%;
-            animation-delay: 5s;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-40px) scale(1.05); }
-        }
-        /* Hero Section */
         .hero {
-            text-align: center;
-            padding: 40px 20px 80px;
-            border-bottom: 2px solid rgba(139, 90, 43, 0.3);
-            margin-bottom: 60px;
+            text-align: left;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.06) 0%, rgba(255, 100, 0, 0.03) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.18);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
         .hero h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 3.5rem;
-            color: #ffd700;
-            margin-bottom: 30px;
-            letter-spacing: 0.08em;
-            text-shadow: 0 0 25px rgba(255, 215, 0, 0.4), 2px 2px 8px rgba(0,0,0,0.9);
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
         }
         .hero-text {
-            font-size: 1.35rem;
-            color: #e6d4b8;
-            max-width: 800px;
-            margin: 0 auto 40px;
-            line-height: 1.8;
-            text-align: left;
+            font-size: 1.1rem;
+            color: #d0d0d0;
+            margin-bottom: 18px;
         }
-        .hero-text p {
-            margin-bottom: 15px;
+        .hero-text strong {
+            color: #ffffff;
+            font-weight: 700;
         }
         .hero-buttons {
             display: flex;
-            gap: 20px;
-            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
             flex-wrap: wrap;
         }
         .btn {
-            font-family: 'Cinzel', serif;
-            padding: 16px 36px;
+            padding: 12px 28px;
             border-radius: 12px;
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 0.95rem;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #8b5a2b 0%, #c9a86c 100%);
-            color: #050302;
-            box-shadow: 0 8px 25px rgba(201, 168, 108, 0.3);
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #0f0f1a;
+            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.35);
         }
         .btn-primary:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 35px rgba(201, 168, 108, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 215, 0, 0.5);
         }
         .btn-secondary {
-            background: rgba(26, 15, 10, 0.9);
-            color: #c9a86c;
-            border: 2px solid #8b5a2b;
+            background: rgba(255, 255, 255, 0.06);
+            color: #e8e8e8;
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
         .btn-secondary:hover {
-            background: rgba(45, 27, 19, 0.95);
-            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 215, 0, 0.35);
+            transform: translateY(-2px);
         }
-        /* Section Headings */
+        .section {
+            margin-bottom: 45px;
+        }
         .section-title {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
-            color: #c9a86c;
-            text-align: center;
-            margin-bottom: 40px;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
-        }
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
-            margin-bottom: 70px;
-        }
-        .feature-card {
-            background: linear-gradient(135deg, rgba(26, 15, 10, 0.95) 0%, rgba(10, 6, 4, 0.95) 100%);
-            border: 2px solid #5d3a1a;
-            border-radius: 16px;
-            padding: 35px 25px;
-            text-align: center;
-            transition: all 0.35s ease;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-        }
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: #ffd700;
-            box-shadow: 0 16px 40px rgba(255, 215, 0, 0.2);
-        }
-        .feature-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-        }
-        .feature-card h3 {
-            font-family: 'Cinzel', serif;
-            color: #ffd700;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-        .feature-card p {
-            font-size: 1.05rem;
-            color: #d8c9ad;
-            line-height: 1.7;
-        }
-        /* Gameplay Section */
-        .gameplay-section {
-            background: linear-gradient(135deg, rgba(26, 15, 10, 0.95) 0%, rgba(10, 6, 4, 0.95) 100%);
-            border: 2px solid #5d3a1a;
-            border-radius: 16px;
-            padding: 50px;
-            margin-bottom: 70px;
-        }
-        .gameplay-block {
-            margin-bottom: 35px;
-        }
-        .gameplay-block:last-child {
-            margin-bottom: 0;
-        }
-        .gameplay-block h3 {
-            font-family: 'Cinzel', serif;
-            color: #ffd700;
             font-size: 1.7rem;
-            margin-bottom: 15px;
-        }
-        .gameplay-block p, .gameplay-block li {
-            font-size: 1.1rem;
-            color: #e6d4b8;
-            line-height: 1.8;
-        }
-        .gameplay-block ul {
-            padding-left: 30px;
-            margin-top: 15px;
-        }
-        .gameplay-block li {
-            margin-bottom: 10px;
-        }
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 60px 20px;
-            border-top: 2px solid rgba(139, 90, 43, 0.3);
-            border-bottom: 2px solid rgba(139, 90, 43, 0.3);
-            margin-bottom: 60px;
-        }
-        .cta-section h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.3rem;
+            font-weight: 800;
             color: #ffd700;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            text-align: left;
+            margin-bottom: 25px;
         }
-        /* Feedback Section */
-        .feedback-section {
-            background: linear-gradient(135deg, rgba(26, 15, 10, 0.95) 0%, rgba(10, 6, 4, 0.95) 100%);
-            border: 2px solid #5d3a1a;
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        .feedback-section h3 {
-            font-family: 'Cinzel', serif;
-            color: #ffd700;
-            font-size: 1.8rem;
+        .info-block {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 25px;
             margin-bottom: 20px;
         }
-        .feedback-section p {
-            font-size: 1.1rem;
-            color: #e6d4b8;
-            margin-bottom: 25px;
-            line-height: 1.7;
+        .info-block h3 {
+            font-size: 1.25rem;
+            color: #ffd700;
+            margin-bottom: 12px;
+            font-weight: 700;
         }
-        /* Footer */
+        .info-block p, .info-block li {
+            font-size: 1rem;
+            color: #c8c8c8;
+        }
+        .info-block ul {
+            padding-left: 24px;
+            margin-top: 12px;
+        }
+        .info-block li {
+            margin-bottom: 8px;
+        }
+        .commands-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .command-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .command-name {
+            font-weight: 700;
+            color: #ffd700;
+            font-size: 0.95rem;
+            min-width: 200px;
+        }
+        .command-desc {
+            color: #c8c8c8;
+            font-size: 0.9rem;
+        }
         .footer {
-            text-align: center;
+            text-align: left;
             padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            margin-top: 40px;
         }
         .footer p {
-            font-family: 'Cinzel', serif;
-            color: #a68b5b;
-            font-size: 1rem;
+            color: #909090;
+            font-size: 0.95rem;
         }
-        /* Responsive */
+        .signature {
+            color: #ffd700;
+            font-weight: 600;
+            font-style: italic;
+        }
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
-            .gameplay-section { padding: 30px 20px; }
+            .hero { padding: 25px; }
+            .hero h1 { font-size: 2rem; }
+            .hero-text { font-size: 1rem; }
+            .command-item { flex-direction: column; align-items: flex-start; }
+            .command-name { min-width: auto; }
+            .info-block { padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
     <div class="container">
-        <!-- Hero Section -->
         <div class="hero">
-            <h1>⚔️ MEDIEVAL FIGHT</h1>
-            <div class="hero-text">
-                <p><strong>You got a dead server no one chats in?</strong></p>
-                <p>Well we got a solution — and no, it's not just another boring leveling bot. It's a full fighting RPG where every single stat point is earned by chatting.</p>
-                <p>It mixes chatting and fun in a way you've never seen: send messages, get points, get stronger, beat bosses, and climb the leaderboards. It doesn't get more rewarding than that — so invite the bot to your server and bring it back to life!</p>
-            </div>
-            <div class="hero-buttons">
-                <a href="https://discord.com/oauth2/authorize?client_id=1525535092120879135&permissions=268520448&scope=bot%20applications.commands" class="btn btn-primary">
-                    🚀 Invite Now
-                </a>
-                <a href="https://medivalfight.alwaysdata.net" class="btn btn-secondary">
-                    📊 Dashboard
-                </a>
-            </div>
+            <h1>⚔️ Medieval Fight</h1>
+            <p class="hero-text">
+                You got a dead server no one chats in?
+            </p>
+            <p class="hero-text">
+                Well we got a solution – and no, it's not just another boring leveling bot. <strong>It's a full fighting RPG where every single stat point is earned by chatting.</strong>
+            </p>
+            <p class="hero-text">
+                It mixes chatting and fun in a way you've never seen: send messages, get points, get stronger, beat bosses, and climb the leaderboards. It doesn't get more rewarding than that – so invite the bot to your server and bring it back to life!
+            </p>
+            <p class="hero-text" style="font-size: 1.2rem; color: #ffffff; font-weight: 600; margin-top: 30px;">
+                Still unsure how it works? Read below!
+            </p>
         </div>
 
-        <!-- Features Section -->
-        <h2 class="section-title">✨ All That You'll Love</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">👹</div>
-                <h3>15 Epic Bosses</h3>
-                <p>From Golems to Dragons and the Void Destroyer — 4 difficulty levels with their own special moves and customizable coin drop rates!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📜</div>
-                <h3>16 Epic Skills</h3>
-                <p>Unleash abilities from the Strength, Wealth, Agility, and Composure categories. Develop each one to level 15 to achieve peak power!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💬</div>
-                <h3>Yappin' Points System</h3>
-                <p>Get stat points even for talking! The admins get to decide which chat channels give out points!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📋</div>
-                <h3>Quests & Achievements</h3>
-                <p>Complete daily, weekly, and repeated quests and earn achievements with their own unique rewards!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎒</div>
-                <h3>Inventory & Titles</h3>
-                <p>Obtain potions, boosters, passive gear, and unique titles to equip your character!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🏪</div>
-                <h3>Shop Items & Roles</h3>
-                <p>Buy items that will change the gameplay for you or Discord roles for your server with earned coins!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Leaderboards</h3>
-                <p>Discover the strongest warrior on your server and battle them to become number one!</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💪</div>
-                <h3>Custom Stats</h3>
-                <p>Allocate your points to Strength (damage output), Wealth (amount of coins), Agility (dodge rate), or Composure (health) stats!</p>
-            </div>
-        </div>
-
-        <!-- How It Works Section -->
-        <div class="gameplay-section">
-            <h2 class="section-title">🎮 How It Works</h2>
-            <div class="gameplay-block">
-                <h3>⚔️ Turn-Based Fights</h3>
-                <p>Battle against bosses in tactical turn-based fights! Utilize your abilities, dodge attacks, and score critical hits for massive rewards!</p>
-            </div>
-            <div class="gameplay-block">
-                <h3>⬆️ Ability Leveling</h3>
-                <p>All of your abilities can be leveled up to 15 with your attribute points! The higher the level, the more damage, healing, and effect you get!</p>
-            </div>
-            <div class="gameplay-block">
-                <h3>📈 Attribute Details</h3>
+        <div class="section">
+            <h2 class="section-title">🎮 The Game</h2>
+            <div class="info-block">
+                <h3>⚔️ Turn-Based Boss Battles</h3>
+                <p>15 epic bosses across 4 difficulty tiers (Easy, Mid, Strong, Very Strong). From Golems to the Void Destroyer, each boss has unique attacks and customizable coin drops!</p>
                 <ul>
-                    <li><strong style="color:#ffd700">Strength:</strong> Gives you a boost in direct damage dealt — perfect for abilities such as Berserk and Smash!</li>
-                    <li><strong style="color:#ffd700">Wealth:</strong> Increases your coin drops and gives you money-related abilities like Bribe and Golden Touch!</li>
-                    <li><strong style="color:#ffd700">Agility:</strong> Increases your dodge percentage and gives you abilities like Quick Step and Shadow Strike!</li>
-                    <li><strong style="color:#ffd700">Composure:</strong> Increases your maximum HP by +5 and gives you defensive abilities such as Iron Will and Last Stand!</li>
+                    <li><strong>Easy:</strong> Golem, Skeleton, Slime, Goblin</li>
+                    <li><strong>Mid:</strong> Orc, Wolf, Spider, Bandit</li>
+                    <li><strong>Strong:</strong> Dragon, Demon, Giant, Vampire</li>
+                    <li><strong>Very Strong:</strong> Lich, Void Destroyer</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h3>📜 16 Powerful Abilities</h3>
+                <p>Unlock and upgrade abilities across 4 categories:</p>
+                <ul>
+                    <li><strong>Strength:</strong> Berserk, Smash, Power Strike, Devastate</li>
+                    <li><strong>Wealth:</strong> Bribe, Golden Touch, Lucky Coin, Treasure Hunter</li>
+                    <li><strong>Agility:</strong> Quick Step, Shadow Strike, Dodge Master, Flurry</li>
+                    <li><strong>Composure:</strong> Iron Will, Last Stand, Heal, Fortify</li>
+                </ul>
+                <p style="margin-top: 15px;">Upgrade each ability up to level 15 using your points!</p>
+            </div>
+
+            <div class="info-block">
+                <h3>💬 Yappin' Points System</h3>
+                <p>Earn points just by chatting! Here's how it works:</p>
+                <ul>
+                    <li>Longer messages = more points</li>
+                    <li>Admins can configure which channels give points via the dashboard</li>
+                    <li>Use points to increase your core attributes</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h3>📈 Attribute Breakdown</h3>
+                <ul>
+                    <li><strong>Strength:</strong> Boosts raw damage output</li>
+                    <li><strong>Wealth:</strong> Increases coin drops from bosses</li>
+                    <li><strong>Agility:</strong> Improves dodge chance</li>
+                    <li><strong>Composure:</strong> +5 HP per point</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h3>🎒 More Features</h3>
+                <ul>
+                    <li><strong>Quests:</strong> Daily, weekly, and repeatable quests with rewards</li>
+                    <li><strong>Achievements:</strong> Long-term goals with exclusive titles and items</li>
+                    <li><strong>Inventory:</strong> Collect potions, boosters, and passive items</li>
+                    <li><strong>Shops:</strong> Spend coins on items or special Discord roles</li>
+                    <li><strong>Leaderboards:</strong> Compete for the top spot in your server</li>
                 </ul>
             </div>
         </div>
 
-        <!-- CTA Section -->
-        <div class="cta-section">
-            <h2>Now You Know Everything — What Are You Waiting For?</h2>
-            <div class="hero-buttons">
+        <div class="section">
+            <h2 class="section-title">📝 All Commands</h2>
+            <div class="commands-grid">
+                <div class="command-item">
+                    <span class="command-name">/profile</span>
+                    <span class="command-desc">Create, view, and manage your character!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/boss fight</span>
+                    <span class="command-desc">Battle bosses for coins, glory, and rare drops!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/boss inspect</span>
+                    <span class="command-desc">Get detailed info on a boss before fighting!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/abilities list</span>
+                    <span class="command-desc">See all 16 abilities and how to unlock them!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/abilities view</span>
+                    <span class="command-desc">View your owned abilities!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/abilities buy</span>
+                    <span class="command-desc">Purchase new abilities with coins!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/abilities inspect</span>
+                    <span class="command-desc">Inspect an ability's details!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/abilities upgrade view</span>
+                    <span class="command-desc">View your ability upgrade progress!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/abilities upgrade ability</span>
+                    <span class="command-desc">Upgrade an ability to make it stronger!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/quest list</span>
+                    <span class="command-desc">View your daily, weekly, and repeatable quests!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/quest claim</span>
+                    <span class="command-desc">Claim rewards for completed quests!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/inventory</span>
+                    <span class="command-desc">Check your items and titles!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/item inspect</span>
+                    <span class="command-desc">Learn what an item does and how to get it!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/title inspect</span>
+                    <span class="command-desc">See how to unlock exclusive titles!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/achievements</span>
+                    <span class="command-desc">Track your achievement progress and claim rewards!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/shop</span>
+                    <span class="command-desc">Browse and buy items from the shop!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/role-shop list</span>
+                    <span class="command-desc">See available Discord roles for purchase!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/role-shop buy</span>
+                    <span class="command-desc">Buy special roles with your coins!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/leaderboard</span>
+                    <span class="command-desc">See the top players in your server!</span>
+                </div>
+                <div class="command-item">
+                    <span class="command-name">/help</span>
+                    <span class="command-desc">Get complete help with all bot features!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="text-align: left;">
+            <p class="hero-text" style="font-size: 1.4rem;">
+                Now that you know everything you need to know to start reviving your server and having fun, invite it!
+            </p>
+            <div class="hero-buttons" style="margin-top: 20px;">
                 <a href="https://discord.com/oauth2/authorize?client_id=1525535092120879135&permissions=268520448&scope=bot%20applications.commands" class="btn btn-primary">
-                    🚀 Invite Now
+                    🚀 Invite the Bot
                 </a>
+            </div>
+            <p class="hero-text" style="font-size: 1.25rem; margin-top: 40px;">
+                Want to make it more personal? That's no problem for us, just go onto our dashboard and configure:
+            </p>
+            <div class="hero-buttons" style="margin-top: 15px;">
                 <a href="https://medivalfight.alwaysdata.net" class="btn btn-secondary">
                     📊 Dashboard
                 </a>
             </div>
+            <p class="hero-text" style="font-size: 1.15rem; margin-top: 40px;">
+                And got anything you'd love to see or have general suggestion?
+            </p>
+            <p class="hero-text" style="font-size: 1.15rem;">
+                Leave us feedback right on the feedback page on the dashboard!
+            </p>
+            <div class="hero-buttons" style="margin-top: 15px;">
+                <a href="https://medivalfight.alwaysdata.net/feedback" class="btn btn-secondary">
+                    💬 Leave Feedback
+                </a>
+            </div>
         </div>
 
-        <!-- Feedback Section -->
-        <div class="feedback-section">
-            <h3>Got Something to Say?</h3>
-            <p>We'd love to hear your feedback, suggestions, or ideas! Let us know what you think.</p>
-            <a href="https://medivalfight.alwaysdata.net/feedback" class="btn btn-secondary">
-                📝 Send Feedback
-            </a>
-        </div>
-
-        <!-- Footer -->
         <div class="footer">
-            <p>⚔️ Medieval Fight Bot © 2026 — Conquer the Realm!</p>
+            <p>Sincerely, <span class="signature">phantom</span></p>
+            <p style="margin-top: 10px;">⚔️ Medieval Fight Bot © 2026 — Conquer the Realm!</p>
         </div>
     </div>
 </body>

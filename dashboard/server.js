@@ -51,6 +51,7 @@ app.get('/feedback', (req, res) => res.sendFile(path.join(__dirname, 'public', '
 app.post('/api/feedback', async (req, res) => {
     console.log('[DEBUG] Feedback endpoint hit!');
     console.log('[DEBUG] Request body:', req.body);
+    console.log('[DEBUG] DISCORD_TOKEN exists:', !!process.env.DISCORD_TOKEN);
     
     const { feedbackText } = req.body;
     if (!feedbackText || feedbackText.trim() === '') {
@@ -71,6 +72,7 @@ app.post('/api/feedback', async (req, res) => {
     
     // Send feedback to both channel and phantom's DM
     const sendFeedback = async (destinationId, isChannel = true) => {
+        console.log(`[DEBUG] Attempting to send feedback to ${isChannel ? 'channel' : 'user'}: ${destinationId}`);
         const url = isChannel 
             ? `https://discord.com/api/v10/channels/${destinationId}/messages`
             : `https://discord.com/api/v10/users/@me/channels`;
@@ -79,6 +81,7 @@ app.post('/api/feedback', async (req, res) => {
             let targetUrl = url;
             if (!isChannel) {
                 // First create DM channel
+                console.log(`[DEBUG] Creating DM channel for user ${destinationId}`);
                 const dmResponse = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -88,12 +91,29 @@ app.post('/api/feedback', async (req, res) => {
                     body: JSON.stringify({ recipient_id: destinationId })
                 });
                 if (!dmResponse.ok) {
-                    console.error(`[DEBUG] Failed to create DM channel for user ${destinationId}:`, await dmResponse.text());
+                    const errorText = await dmResponse.text();
+                    console.error(`[DEBUG] Failed to create DM channel for user ${destinationId}:`, errorText);
                     return;
                 }
                 const dmData = await dmResponse.json();
+                console.log(`[DEBUG] DM channel created:`, dmData.id);
                 targetUrl = `https://discord.com/api/v10/channels/${dmData.id}/messages`;
             }
+            
+            const messagePayload = {
+                embeds: [
+                    {
+                        title: '📝 New Feedback Received!',
+                        color: 0xffd700,
+                        fields: [
+                            { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
+                            { name: 'Feedback', value: feedbackText.trim() }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }
+                ]
+            };
+            console.log(`[DEBUG] Sending message payload:`, JSON.stringify(messagePayload));
             
             const messageResponse = await fetch(targetUrl, {
                 method: 'POST',
@@ -101,19 +121,7 @@ app.post('/api/feedback', async (req, res) => {
                     'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    embeds: [
-                        {
-                            title: '📝 New Feedback Received!',
-                            color: 0xffd700,
-                            fields: [
-                                { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
-                                { name: 'Feedback', value: feedbackText.trim() }
-                            ],
-                            timestamp: new Date().toISOString()
-                        }
-                    ]
-                })
+                body: JSON.stringify(messagePayload)
             });
             
             console.log(`[DEBUG] Discord API (${isChannel ? 'channel' : 'DM'}) response status:`, messageResponse.status);
@@ -129,8 +137,10 @@ app.post('/api/feedback', async (req, res) => {
     };
     
     // Send to both channel and phantom
+    console.log('[DEBUG] Starting to send feedback messages...');
     await sendFeedback('1527647475215896776', true);
     await sendFeedback('1324354578338025533', false);
+    console.log('[DEBUG] Done sending feedback messages');
     
     res.sendStatus(200);
 });
