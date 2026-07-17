@@ -55,7 +55,28 @@
                     <h2>Server Management</h2>
                     <button id="back-to-dashboard" class="medieval-btn">← Back to Dashboard</button>
                     <h3 id="server-name">Server Name</h3>
-                    <h4>Role Shop Configuration (Slots 1-10)</h4>
+                    
+                    <h4>Server Configuration</h4>
+                    <div id="server-config-section">
+                        <div class="config-group">
+                            <label>Coin Rewards:</label>
+                            <div class="coin-rewards-grid">
+                                <div><label>Easy Bosses:</label> <input type="number" id="coins-easy" class="medieval-input small-input"></div>
+                                <div><label>Mid Bosses:</label> <input type="number" id="coins-mid" class="medieval-input small-input"></div>
+                                <div><label>Strong Bosses:</label> <input type="number" id="coins-strong" class="medieval-input small-input"></div>
+                                <div><label>Very Strong Bosses:</label> <input type="number" id="coins-very-strong" class="medieval-input small-input"></div>
+                            </div>
+                        </div>
+                        <div class="config-group">
+                            <label>Tracked Channels (earn points from messages here):</label>
+                            <div id="channel-selector">
+                                <div class="channel-list" id="channel-list"></div>
+                            </div>
+                        </div>
+                        <button id="save-server-config" class="medieval-btn" style="margin-top: 1rem;">Save Server Config</button>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Role Shop Configuration (Slots 1-10)</h4>
                     <div id="role-shop-slots" class="role-shop-grid"></div>
                 </div>
             </div>

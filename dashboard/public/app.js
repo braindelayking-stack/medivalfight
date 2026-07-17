@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentServer = null;
         showPage('dashboard');
     });
+    document.getElementById('save-server-config').addEventListener('click', saveServerConfig);
 });
 
 function updateUI() {
@@ -72,7 +73,77 @@ async function openServerManagement(serverId, serverName) {
     currentServer = { id: serverId, name: serverName };
     document.getElementById('server-name').textContent = serverName;
     await loadServerRoleShop();
+    await loadServerConfig();
+    await loadServerChannels();
     showPage('server-management');
+}
+
+async function loadServerConfig() {
+    if (!currentServer) return;
+    const response = await fetch(`/api/guilds/${currentServer.id}/config`);
+    if (!response.ok) {
+        alert('Failed to load server config!');
+        return;
+    }
+    const { config, trackedChannels } = await response.json();
+    // Populate coin inputs
+    document.getElementById('coins-easy').value = config.coins_easy || 100;
+    document.getElementById('coins-mid').value = config.coins_mid || 150;
+    document.getElementById('coins-strong').value = config.coins_strong || 200;
+    document.getElementById('coins-very-strong').value = config.coins_very_strong || 300;
+    // Save tracked channels to check later
+    window.currentTrackedChannels = trackedChannels;
+}
+
+async function loadServerChannels() {
+    if (!currentServer) return;
+    const response = await fetch(`/api/guilds/${currentServer.id}/channels`);
+    if (!response.ok) {
+        alert('Failed to load server channels!');
+        return;
+    }
+    const channels = await response.json();
+    renderChannelList(channels);
+}
+
+function renderChannelList(channels) {
+    const channelListDiv = document.getElementById('channel-list');
+    let html = '';
+    channels.forEach(channel => {
+        const isTracked = window.currentTrackedChannels?.includes(channel.id) || false;
+        html += `
+            <div class="channel-item">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="channel-checkbox" value="${channel.id}" ${isTracked ? 'checked' : ''}>
+                    <span class="channel-name">#${channel.name}</span>
+                </label>
+            </div>
+        `;
+    });
+    channelListDiv.innerHTML = html;
+}
+
+async function saveServerConfig() {
+    if (!currentServer) return;
+    const coinsEasy = parseInt(document.getElementById('coins-easy').value) || 100;
+    const coinsMid = parseInt(document.getElementById('coins-mid').value) || 150;
+    const coinsStrong = parseInt(document.getElementById('coins-strong').value) || 200;
+    const coinsVeryStrong = parseInt(document.getElementById('coins-very-strong').value) || 300;
+    // Get all checked channels
+    const channelCheckboxes = document.querySelectorAll('.channel-checkbox:checked');
+    const trackedChannels = Array.from(channelCheckboxes).map(cb => cb.value);
+    
+    const response = await fetch(`/api/guilds/${currentServer.id}/config`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels })
+    });
+    
+    if (response.ok) {
+        alert('Server config saved!');
+    } else {
+        alert('Failed to save server config!');
+    }
 }
 
 async function loadServerRoleShop() {

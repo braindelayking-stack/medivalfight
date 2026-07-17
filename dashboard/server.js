@@ -7,6 +7,7 @@ const DiscordStrategy = require('passport-discord').Strategy;
 const cors = require('cors');
 const path = require('path');
 const db = require('../database/db');
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +33,12 @@ passport.use(new DiscordStrategy({
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
     callbackURL: process.env.CALLBACK_URL,
     scope: ['identify', 'guilds']
-}, (accessToken, refreshToken, profile, done) => done(null, profile)));
+}, (accessToken, refreshToken, profile, done) => {
+    // Attach tokens to profile so we can use them later!
+    profile.accessToken = accessToken;
+    profile.refreshToken = refreshToken;
+    done(null, profile);
+}));
 
 app.get('/auth/discord', passport.authenticate('discord'));
 app.get('/auth/discord/callback', passport.authenticate('discord', { failureRedirect: '/' }), (req, res) => res.redirect('/dashboard'));
@@ -111,6 +117,32 @@ app.delete('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
     }
     db.prepare('DELETE FROM server_role_shop WHERE server_id = ? AND slot = ?').run(serverId, parseInt(slot));
     res.sendStatus(200);
+});
+
+// API endpoint to get guild channels from Discord
+app.get('/api/guilds/:serverId/channels', async (req, res) => {
+    const { serverId } = req.params;
+    const guild = req.user?.guilds?.find(g => g.id === serverId);
+    if (!guild || !(guild.permissions & 0x20)) {
+        return res.sendStatus(403);
+    }
+    try {
+        const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
+            headers: {
+                'Authorization': `Bearer ${req.user.accessToken}`
+            }
+        });
+        if (!response.ok) {
+            return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
+        }
+        const channels = await response.json();
+        // Filter to only text channels
+        const textChannels = channels.filter(ch => ch.type === 0); // Type 0 is text channel
+        res.json(textChannels);
+    } catch (error) {
+        console.error('Error fetching guild channels:', error);
+        res.status(500).json({ error: 'Failed to fetch guild channels' });
+    }
 });
 
 // Server Config API Routes
