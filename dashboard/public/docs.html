@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -198,10 +197,17 @@
     <div class="sidebar">
         <h2>📜 Contents</h2>
         <a href="#getting-started">🎮 Getting Started</a>
+        <a href="#yappin-system">💬 Yappin' System</a>
         <a href="#stats">💪 Stats Explained</a>
         <a href="#abilities">📜 Abilities</a>
         <a href="#ability-upgrades">⬆️ Ability Upgrades</a>
+        <a href="#quests">📋 Quests</a>
+        <a href="#inventory">🎒 Inventory</a>
+        <a href="#achievements">🏆 Achievements</a>
+        <a href="#shops">🏪 Shops</a>
+        <a href="#leaderboard">📊 Leaderboard</a>
         <a href="#bosses">👹 Bosses</a>
+        <a href="#dashboard">🗄️ Dashboard</a>
     </div>
 
     <div class="main-content">
@@ -211,12 +217,31 @@
             <div class="section" id="getting-started">
                 <h2>🎮 Getting Started</h2>
                 <ul>
-                    <li>Use <code>/profile create</code> to create your character and get 100 free points to distribute!</li>
-                    <li>Use <code>/profile view</code> to see your current stats!</li>
-                    <li>Use <code>/profile distribute</code> to distribute your free points!</li>
+                    <li>Use <code>/profile</code> to view and manage your character!</li>
                     <li>Use <code>/boss fight</code> to battle bosses and earn coins!</li>
+                    <li>Use <code>/boss inspect</code> to view boss info, attacks, and possible drops!</li>
+                    <li>Use <code>/quest list</code> to see your current quests and progress!</li>
+                    <li>Use <code>/quest claim</code> to claim rewards for completed quests!</li>
+                    <li>Use <code>/inventory</code> to check your items and titles!</li>
+                    <li>Use <code>/item inspect</code> to check what an item does!</li>
+                    <li>Use <code>/title inspect</code> to check how to get a title!</li>
+                    <li>Use <code>/achievements</code> to track your achievement progress!</li>
+                    <li>Use <code>/abilities list</code> to see all abilities!</li>
                     <li>Use <code>/abilities buy</code> to buy abilities!</li>
                     <li>Use <code>/abilities upgrade</code> to upgrade your abilities (up to 15 levels!)!</li>
+                    <li>Use <code>/shop</code> to browse the item shop!</li>
+                    <li>Use <code>/role-shop list</code> to browse the role shop!</li>
+                    <li>Use <code>/role-shop buy</code> to buy roles!</li>
+                    <li>Use <code>/leaderboard</code> to see top players!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="yappin-system">
+                <h2>💬 Yappin' System</h2>
+                <ul>
+                    <li>Earn stat points just by chatting (we call this "yappin'")!</li>
+                    <li>Admins can configure "tracked channels" in the dashboard where points are earned!</li>
+                    <li>No daily limits - keep yappin' to earn more points!</li>
                 </ul>
             </div>
 
@@ -311,7 +336,7 @@
 
                 <h3 style="color: #FF6347;">🔴 Strong Abilities</h3>
                 <div class="ability-card">
-                    <div class="ability-info">-
+                    <div class="ability-info">
                         <h4>🔥 Berserk (250 strength)</h4>
                         <p>Sacrifice 20% current HP to deal 50 base damage</p>
                     </div>
@@ -340,9 +365,36 @@
                 <h2>⬆️ Ability Upgrades</h2>
                 <ul>
                     <li>Use <code>/abilities upgrade view</code> to see upgrade levels for your abilities!</li>
-                    <li>Use <code>/abilities upgrade</code> to spend attribute points (strength/wealth/agility/composure) to upgrade abilities!</li>
+                    <li>Use <code>/abilities upgrade ability</code> to spend attribute points (strength/wealth/agility/composure) to upgrade abilities!</li>
                     <li>Each upgrade costs (30 + current level * 30) points of the corresponding attribute!</li>
                     <li>Max upgrade level is 15!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="shops">
+                <h2>🏪 Shops</h2>
+                <ul>
+                    <li>Use <code>/shop</code> to browse items available for purchase!</li>
+                    <li>Use <code>/role-shop list</code> to see available roles to buy!</li>
+                    <li>Use <code>/role-shop buy</code> to purchase a role with coins!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="leaderboard">
+                <h2>📊 Leaderboard</h2>
+                <ul>
+                    <li>Use <code>/leaderboard</code> to see the top players in the server!</li>
+                </ul>
+            </div>
+
+            <div class="section" id="dashboard">
+                <h2>🗄️ Dashboard</h2>
+                <ul>
+                    <li>Visit <a href="https://medivalfight.alwaysdata.net" target="_blank" style="color: #ffd700;">https://medivalfight.alwaysdata.net</a> for the full dashboard!</li>
+                    <li>Admins: Configure tracked channels (where yappin' points are earned)!</li>
+                    <li>Admins: Set boss kill coin rewards by difficulty!</li>
+                    <li>View battle logs!</li>
+                    <li>Access comprehensive documentation!</li>
                 </ul>
             </div>
 
@@ -355,7 +407,7 @@
                     <div class="boss-info">
                         <h3>🪨 Golem</h3>
                         <p><span class="stat">❤️ Max Health</span>: 100</p>
-                        <p><span class="stat">💰 Reward</span>: 100 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 100 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Golem Attack (10 dmg), Poison Attack, Shield</p>
                     </div>
                 </div>
@@ -364,7 +416,7 @@
                     <div class="boss-info">
                         <h3>🐉 Dragon</h3>
                         <p><span class="stat">❤️ Max Health</span>: 100</p>
-                        <p><span class="stat">💰 Reward</span>: 100 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 100 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Dragon Attack (20 dmg), Fire Attack, Shield</p>
                     </div>
                 </div>
@@ -373,7 +425,7 @@
                     <div class="boss-info">
                         <h3>💀 Skeleton</h3>
                         <p><span class="stat">❤️ Max Health</span>: 100</p>
-                        <p><span class="stat">💰 Reward</span>: 100 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 100 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Skeleton Attack (15 dmg), Shield, Skeleton Army</p>
                     </div>
                 </div>
@@ -384,7 +436,7 @@
                     <div class="boss-info">
                         <h3>👻 Wraith King</h3>
                         <p><span class="stat">❤️ Max Health</span>: 150</p>
-                        <p><span class="stat">💰 Reward</span>: 200 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 150 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Spectral Slash (18 dmg), Soul Drain, Wraith Summon, Phantom Shield</p>
                     </div>
                 </div>
@@ -393,7 +445,7 @@
                     <div class="boss-info">
                         <h3>🧛 Vampire Lord</h3>
                         <p><span class="stat">❤️ Max Health</span>: 150</p>
-                        <p><span class="stat">💰 Reward</span>: 250 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 150 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Blood Slash (15 dmg), Blood Drain, Dark Mist</p>
                     </div>
                 </div>
@@ -402,7 +454,7 @@
                     <div class="boss-info">
                         <h3>⚡ Storm Elemental</h3>
                         <p><span class="stat">❤️ Max Health</span>: 200</p>
-                        <p><span class="stat">💰 Reward</span>: 300 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 150 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Lightning Strike (20 dmg), Thunder Shock, Electric Shield</p>
                     </div>
                 </div>
@@ -411,7 +463,7 @@
                     <div class="boss-info">
                         <h3>🔥 Fire Elemental</h3>
                         <p><span class="stat">❤️ Max Health</span>: 200</p>
-                        <p><span class="stat">💰 Reward</span>: 350 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 150 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Inferno Blast (25 dmg), Firestorm, Heat Wave, Magma Barrier</p>
                     </div>
                 </div>
@@ -422,7 +474,7 @@
                     <div class="boss-info">
                         <h3>❄️ Ice Giant</h3>
                         <p><span class="stat">❤️ Max Health</span>: 250</p>
-                        <p><span class="stat">💰 Reward</span>: 400 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Frozen Strike (25 dmg), Ice Prison, Ice Shield</p>
                     </div>
                 </div>
@@ -431,7 +483,7 @@
                     <div class="boss-info">
                         <h3>🗡️ Shadow Assassin</h3>
                         <p><span class="stat">❤️ Max Health</span>: 250</p>
-                        <p><span class="stat">💰 Reward</span>: 450 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Shadow Strike (40 dmg), Smoke Bomb, Poison Blade</p>
                     </div>
                 </div>
@@ -440,7 +492,7 @@
                     <div class="boss-info">
                         <h3>🔥 Ancient Phoenix</h3>
                         <p><span class="stat">❤️ Max Health</span>: 300</p>
-                        <p><span class="stat">💰 Reward</span>: 500 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Flame Burst (30 dmg), Burning Wings, Rebirth Flame</p>
                     </div>
                 </div>
@@ -449,7 +501,7 @@
                     <div class="boss-info">
                         <h3>🦴 Ancient Mummy</h3>
                         <p><span class="stat">❤️ Max Health</span>: 300</p>
-                        <p><span class="stat">💰 Reward</span>: 550 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Curse Strike (20 dmg), Ancient Curse, Resurrection</p>
                     </div>
                 </div>
@@ -458,7 +510,7 @@
                     <div class="boss-info">
                         <h3>💀 Lich Lord</h3>
                         <p><span class="stat">❤️ Max Health</span>: 275</p>
-                        <p><span class="stat">💰 Reward</span>: 600 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Death Ray (30 dmg), Curse of Decay, Raise Undead, Bone Shield, Life Steal</p>
                     </div>
                 </div>
@@ -469,7 +521,7 @@
                     <div class="boss-info">
                         <h3>👹 Demon King</h3>
                         <p><span class="stat">❤️ Max Health</span>: 350</p>
-                        <p><span class="stat">💰 Reward</span>: 700 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Demon Blade (30 dmg), Hellfire, Dark Barrier</p>
                     </div>
                 </div>
@@ -478,7 +530,7 @@
                     <div class="boss-info">
                         <h3>🐙 Sea Kraken</h3>
                         <p><span class="stat">❤️ Max Health</span>: 400</p>
-                        <p><span class="stat">💰 Reward</span>: 800 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Tentacle Smash (35 dmg), Water Prison, Tidal Wave</p>
                     </div>
                 </div>
@@ -487,7 +539,7 @@
                     <div class="boss-info">
                         <h3>🌑 Void Destroyer</h3>
                         <p><span class="stat">❤️ Max Health</span>: 500</p>
-                        <p><span class="stat">💰 Reward</span>: 1000 coins</p>
+                        <p><span class="stat">💰 Reward</span>: Configurable (default 200 coins)</p>
                         <p><span class="stat">🗡️ Attacks</span>: Void Blast (50 dmg), Reality Break, Void Shield</p>
                     </div>
                 </div>
