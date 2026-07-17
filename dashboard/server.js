@@ -69,40 +69,68 @@ app.post('/api/feedback', async (req, res) => {
         console.error('[DEBUG] Database error:', dbError);
     }
     
-    // Send feedback to channel (ID: 1527647475215896776) using Discord API
-    try {
-        console.log('[DEBUG] Attempting to send message to Discord channel');
-        const messageResponse = await fetch(`https://discord.com/api/v10/channels/1527647475215896776/messages`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                embeds: [
-                    {
-                        title: '📝 New Feedback Received!',
-                        color: 0xffd700,
-                        fields: [
-                            { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
-                            { name: 'Feedback', value: feedbackText.trim() }
-                        ],
-                        timestamp: new Date().toISOString()
-                    }
-                ]
-            })
-        });
+    // Send feedback to both channel and phantom's DM
+    const sendFeedback = async (destinationId, isChannel = true) => {
+        const url = isChannel 
+            ? `https://discord.com/api/v10/channels/${destinationId}/messages`
+            : `https://discord.com/api/v10/users/@me/channels`;
         
-        console.log('[DEBUG] Discord API response status:', messageResponse.status);
-        if (!messageResponse.ok) {
-            const errorText = await messageResponse.text();
-            console.error('[DEBUG] Failed to send feedback message:', errorText);
-        } else {
-            console.log('[DEBUG] Feedback message sent successfully!');
+        try {
+            let targetUrl = url;
+            if (!isChannel) {
+                // First create DM channel
+                const dmResponse = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ recipient_id: destinationId })
+                });
+                if (!dmResponse.ok) {
+                    console.error(`[DEBUG] Failed to create DM channel for user ${destinationId}:`, await dmResponse.text());
+                    return;
+                }
+                const dmData = await dmResponse.json();
+                targetUrl = `https://discord.com/api/v10/channels/${dmData.id}/messages`;
+            }
+            
+            const messageResponse = await fetch(targetUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    embeds: [
+                        {
+                            title: '📝 New Feedback Received!',
+                            color: 0xffd700,
+                            fields: [
+                                { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
+                                { name: 'Feedback', value: feedbackText.trim() }
+                            ],
+                            timestamp: new Date().toISOString()
+                        }
+                    ]
+                })
+            });
+            
+            console.log(`[DEBUG] Discord API (${isChannel ? 'channel' : 'DM'}) response status:`, messageResponse.status);
+            if (!messageResponse.ok) {
+                const errorText = await messageResponse.text();
+                console.error(`[DEBUG] Failed to send feedback to ${isChannel ? 'channel' : 'DM'}:`, errorText);
+            } else {
+                console.log(`[DEBUG] Feedback sent successfully to ${isChannel ? 'channel' : 'DM'}!`);
+            }
+        } catch (error) {
+            console.error(`[DEBUG] Error sending feedback to ${isChannel ? 'channel' : 'DM'}:`, error);
         }
-    } catch (error) {
-        console.error('[DEBUG] Error sending feedback message:', error);
-    }
+    };
+    
+    // Send to both channel and phantom
+    await sendFeedback('1527647475215896776', true);
+    await sendFeedback('1324354578338025533', false);
     
     res.sendStatus(200);
 });
