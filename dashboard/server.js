@@ -244,27 +244,41 @@ app.delete('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
 
 // API endpoint to get guild channels from Discord
 app.get('/api/guilds/:serverId/channels', async (req, res) => {
-    const { serverId } = req.params;
-    const guild = req.user?.guilds?.find(g => g.id === serverId);
-    if (!guild || !(guild.permissions & 0x20)) {
-        return res.sendStatus(403);
-    }
     try {
+        const { serverId } = req.params;
+        console.log('[DEBUG] Loading channels for server:', serverId);
+        console.log('[DEBUG] User:', req.user?.id, req.user?.username);
+        
+        const guild = req.user?.guilds?.find(g => g.id === serverId);
+        if (!guild || !(guild.permissions & 0x20)) {
+            console.error('[DEBUG] No permission to access guild channels');
+            return res.sendStatus(403);
+        }
+        
+        console.log('[DEBUG] Fetching channels from Discord API...');
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
             headers: {
                 'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
             }
         });
+        
+        console.log('[DEBUG] Discord API response status:', response.status);
         if (!response.ok) {
-            console.error('Failed to fetch guild channels:', await response.text());
+            const errorText = await response.text();
+            console.error('[DEBUG] Failed to fetch guild channels:', errorText);
             return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
         }
+        
         const channels = await response.json();
+        console.log('[DEBUG] Channels from Discord:', channels.length, 'channels');
+        
         // Filter to only text channels
         const textChannels = channels.filter(ch => ch.type === 0); // Type 0 is text channel
+        console.log('[DEBUG] Filtered to', textChannels.length, 'text channels');
+        
         res.json(textChannels);
     } catch (error) {
-        console.error('Error fetching guild channels:', error);
+        console.error('[DEBUG] Error fetching guild channels:', error);
         res.status(500).json({ error: 'Failed to fetch guild channels' });
     }
 });
