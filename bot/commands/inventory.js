@@ -44,7 +44,7 @@ module.exports = {
                     epic: '🟣',
                     legendary: '🟡'
                 }[ui.rarity] || '⚪';
-                return `${rarityEmoji} **${ui.name}** x${ui.quantity} - ${ui.description}${ui.equipped ? ' (Equipped' : ''}';
+                return `${rarityEmoji} **${ui.name}** x${ui.quantity} - ${ui.description}${ui.equipped ? ' (Equipped)' : ''}`;
             }).join('\n');
         } else {
             itemsList = 'No items yet!';
