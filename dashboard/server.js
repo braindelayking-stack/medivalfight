@@ -49,18 +49,29 @@ app.get('/feedback', (req, res) => res.sendFile(path.join(__dirname, 'public', '
 
 // Feedback API Routes
 app.post('/api/feedback', async (req, res) => {
+    console.log('[DEBUG] Feedback endpoint hit!');
+    console.log('[DEBUG] Request body:', req.body);
+    
     const { feedbackText } = req.body;
     if (!feedbackText || feedbackText.trim() === '') {
+        console.log('[DEBUG] Missing feedback text');
         return res.status(400).json({ error: 'Feedback text is required' });
     }
     const userId = req.user?.id || 'anonymous';
     const username = req.user?.username || 'Anonymous User';
+    console.log('[DEBUG] User:', { userId, username });
     
     // Insert into database
-    db.prepare('INSERT INTO feedback (user_id, username, feedback_text) VALUES (?, ?, ?)').run(userId, username, feedbackText.trim());
+    try {
+        db.prepare('INSERT INTO feedback (user_id, username, feedback_text) VALUES (?, ?, ?)').run(userId, username, feedbackText.trim());
+        console.log('[DEBUG] Feedback saved to database');
+    } catch (dbError) {
+        console.error('[DEBUG] Database error:', dbError);
+    }
     
     // Send feedback to channel (ID: 1527647475215896776) using Discord API
     try {
+        console.log('[DEBUG] Attempting to send message to Discord channel');
         const messageResponse = await fetch(`https://discord.com/api/v10/channels/1527647475215896776/messages`, {
             method: 'POST',
             headers: {
@@ -82,11 +93,15 @@ app.post('/api/feedback', async (req, res) => {
             })
         });
         
+        console.log('[DEBUG] Discord API response status:', messageResponse.status);
         if (!messageResponse.ok) {
-            console.error('Failed to send feedback message:', await messageResponse.text());
+            const errorText = await messageResponse.text();
+            console.error('[DEBUG] Failed to send feedback message:', errorText);
+        } else {
+            console.log('[DEBUG] Feedback message sent successfully!');
         }
     } catch (error) {
-        console.error('Error sending feedback message:', error);
+        console.error('[DEBUG] Error sending feedback message:', error);
     }
     
     res.sendStatus(200);
