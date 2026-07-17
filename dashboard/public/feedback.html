@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Medieval Fight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Noto Serif', serif;
+            background: linear-gradient(135deg, #050302 0%, #1a0f0a 40%, #2d1b13 70%, #0a0604 100%);
+            color: #f5e9d3;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(26, 15, 10, 0.95) 0%, rgba(10, 6, 4, 0.95) 100%);
+            border: 2px solid #5d3a1a;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #e6d4b8;
+            font-weight: 600;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #5d3a1a;
+            border-radius: 8px;
+            padding: 15px;
+            color: #f5e9d3;
+            font-family: 'Noto Serif', serif;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        .btn {
+            font-family: 'Cinzel', serif;
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, #8b5a2b 0%, #c9a86c 100%);
+            color: #050302;
+            box-shadow: 0 6px 20px rgba(201, 168, 108, 0.3);
+            width: 100%;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(201, 168, 108, 0.5);
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .success-message {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 128, 0, 0.2);
+            border-left: 4px solid #00ff00;
+            border-radius: 8px;
+            color: #90ee90;
+            text-align: center;
+            display: none;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #c9a86c;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Send Feedback</h1>
+        <form id="feedbackForm">
+            <label for="feedbackText">Your Feedback:</label>
+            <textarea id="feedbackText" placeholder="Tell us what you think..."></textarea>
+            <button type="submit" class="btn" id="submitBtn">Send Feedback</button>
+        </form>
+        <div id="successMessage" class="success-message">
+            Thank you for your feedback! We appreciate it!
+        </div>
+        <a href="/" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedbackText = document.getElementById('feedbackText').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ feedbackText })
+                });
+
+                if (response.ok) {
+                    document.getElementById('feedbackText').value = '';
+                    successMessage.classList.add('show');
+                    setTimeout(() => successMessage.classList.remove('show'), 5000);
+                } else {
+                    alert('Failed to send feedback. Please try again!');
+                }
+            } catch (error) {
+                console.error('Error sending feedback:', error);
+                alert('Failed to send feedback. Please try again!');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Feedback';
+            }
+        });
+    </script>
+</body>
+</html>

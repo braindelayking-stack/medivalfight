@@ -45,6 +45,69 @@ app.get('/auth/discord/callback', passport.authenticate('discord', { failureRedi
 app.get('/auth/logout', (req, res) => { req.logout(err => res.redirect('/')); });
 app.get('/docs', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs.html')));
 app.get('/battle-log', (req, res) => res.sendFile(path.join(__dirname, 'public', 'battle-log.html')));
+app.get('/feedback', (req, res) => res.sendFile(path.join(__dirname, 'public', 'feedback.html')));
+
+// Feedback API Routes
+app.post('/api/feedback', async (req, res) => {
+    const { feedbackText } = req.body;
+    if (!feedbackText || feedbackText.trim() === '') {
+        return res.status(400).json({ error: 'Feedback text is required' });
+    }
+    const userId = req.user?.id || 'anonymous';
+    const username = req.user?.username || 'Anonymous User';
+    
+    // Insert into database
+    db.prepare('INSERT INTO feedback (user_id, username, feedback_text) VALUES (?, ?, ?)').run(userId, username, feedbackText.trim());
+    
+    // Send DM to Phantom (ID: 1324354578338025533) using Discord API
+    try {
+        // First, create a DM channel
+        const dmChannelResponse = await fetch(`https://discord.com/api/v10/users/@me/channels`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ recipient_id: '1324354578338025533' })
+        });
+        
+        if (!dmChannelResponse.ok) {
+            console.error('Failed to create DM channel:', await dmChannelResponse.text());
+        } else {
+            const dmChannel = await dmChannelResponse.json();
+            
+            // Now send the message
+            const messageResponse = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    embeds: [
+                        {
+                            title: '📝 New Feedback Received!',
+                            color: 0xffd700,
+                            fields: [
+                                { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
+                                { name: 'Feedback', value: feedbackText.trim() }
+                            ],
+                            timestamp: new Date().toISOString()
+                        }
+                    ]
+                })
+            });
+            
+            if (!messageResponse.ok) {
+                console.error('Failed to send DM:', await messageResponse.text());
+            }
+        }
+    } catch (error) {
+        console.error('Error sending feedback DM:', error);
+    }
+    
+    res.sendStatus(200);
+});
 
 app.get('/api/battle-log/:code', (req, res) => {
     const { code } = req.params;

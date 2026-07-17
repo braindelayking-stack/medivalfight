@@ -205,6 +205,14 @@ CREATE TABLE IF NOT EXISTS daily_quest_rotation (
     date TEXT NOT NULL UNIQUE,
     quest_ids TEXT NOT NULL -- JSON array of quest IDs
 );
+
+CREATE TABLE IF NOT EXISTS feedback (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    feedback_text TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
 `);
 
 // Seed initial data
