@@ -46,7 +46,6 @@ app.get('/api/battle-log/:code', (req, res) => {
     if (!log) {
         return res.status(404).json({ error: 'Battle log not found' });
     }
-    // Parse the full_log JSON
     log.full_log = JSON.parse(log.full_log);
     res.json(log);
 });
@@ -76,7 +75,6 @@ app.put('/api/user/:serverId/:userId', (req, res) => {
 // Role Shop API Routes
 app.get('/api/guilds/:serverId/role-shop', (req, res) => {
     const { serverId } = req.params;
-    // Check if user has Manage Guild permission for this server (0x20 is ManageGuild)
     const guild = req.user?.guilds?.find(g => g.id === serverId);
     if (!guild || !(guild.permissions & 0x20)) {
         return res.sendStatus(403);
@@ -88,7 +86,6 @@ app.get('/api/guilds/:serverId/role-shop', (req, res) => {
 app.put('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
     const { serverId, slot } = req.params;
     const { roleId, cost } = req.body;
-    // Check permissions
     const guild = req.user?.guilds?.find(g => g.id === serverId);
     if (!guild || !(guild.permissions & 0x20)) {
         return res.sendStatus(403);
@@ -108,12 +105,51 @@ app.put('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
 
 app.delete('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
     const { serverId, slot } = req.params;
-    // Check permissions
     const guild = req.user?.guilds?.find(g => g.id === serverId);
     if (!guild || !(guild.permissions & 0x20)) {
         return res.sendStatus(403);
     }
     db.prepare('DELETE FROM server_role_shop WHERE server_id = ? AND slot = ?').run(serverId, parseInt(slot));
+    res.sendStatus(200);
+});
+
+// Server Config API Routes
+app.get('/api/guilds/:serverId/config', (req, res) => {
+    const { serverId } = req.params;
+    const guild = req.user?.guilds?.find(g => g.id === serverId);
+    if (!guild || !(guild.permissions & 0x20)) {
+        return res.sendStatus(403);
+    }
+    let config = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(serverId);
+    if (!config) {
+        db.prepare('INSERT OR IGNORE INTO server_config (server_id) VALUES (?)').run(serverId);
+        config = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(serverId);
+    }
+    const trackedChannels = db.prepare('SELECT channel_id FROM server_tracked_channels WHERE server_id = ?').all(serverId);
+    res.json({ config, trackedChannels: trackedChannels.map(c => c.channel_id) });
+});
+
+app.put('/api/guilds/:serverId/config', (req, res) => {
+    const { serverId } = req.params;
+    const { coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels } = req.body;
+    const guild = req.user?.guilds?.find(g => g.id === serverId);
+    if (!guild || !(guild.permissions & 0x20)) {
+        return res.sendStatus(403);
+    }
+    db.prepare(`
+        INSERT INTO server_config (server_id, coins_easy, coins_mid, coins_strong, coins_very_strong, updated_at)
+        VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(server_id) DO UPDATE SET
+            coins_easy = excluded.coins_easy,
+            coins_mid = excluded.coins_mid,
+            coins_strong = excluded.coins_strong,
+            coins_very_strong = excluded.coins_very_strong,
+            updated_at = CURRENT_TIMESTAMP
+    `).run(serverId, coinsEasy, coinsMid, coinsStrong, coinsVeryStrong);
+    db.prepare('DELETE FROM server_tracked_channels WHERE server_id = ?').run(serverId);
+    for (const channelId of (trackedChannels || [])) {
+        db.prepare('INSERT OR IGNORE INTO server_tracked_channels (server_id, channel_id) VALUES (?, ?)').run(serverId, channelId);
+    }
     res.sendStatus(200);
 });
 

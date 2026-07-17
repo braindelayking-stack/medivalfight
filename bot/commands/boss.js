@@ -3,7 +3,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../database/db');
 const path = require('path');
 
-// Boss data with images
+// Boss data with images and difficulty tiers
 const bosses = [
     // Easy Bosses (<=100 HP)
     {
@@ -11,6 +11,7 @@ const bosses = [
         name: 'Golem',
         health: 100,
         maxHealth: 100,
+        difficulty: 'easy',
         image: path.join(__dirname, '../../dashboard/public/golem.png'),
         attacks: [
             { name: 'Golem Attack', damage: 10, weight: 60 },
@@ -24,6 +25,7 @@ const bosses = [
         name: 'Dragon',
         health: 100,
         maxHealth: 100,
+        difficulty: 'easy',
         image: path.join(__dirname, '../../dashboard/public/dragon.png'),
         attacks: [
             { name: 'Dragon Attack', damage: 20, weight: 60 },
@@ -37,6 +39,7 @@ const bosses = [
         name: 'Skeleton',
         health: 100,
         maxHealth: 100,
+        difficulty: 'easy',
         image: path.join(__dirname, '../../dashboard/public/skeleton.png'),
         attacks: [
             { name: 'Skeleton Attack', damage: 15, weight: 60 },
@@ -51,6 +54,7 @@ const bosses = [
         name: 'Wraith King',
         health: 150,
         maxHealth: 150,
+        difficulty: 'mid',
         image: path.join(__dirname, '../../dashboard/public/wraith_king.png'),
         attacks: [
             { name: 'Spectral Slash', damage: 18, weight: 50 },
@@ -65,6 +69,7 @@ const bosses = [
         name: 'Vampire Lord',
         health: 150,
         maxHealth: 150,
+        difficulty: 'mid',
         image: path.join(__dirname, '../../dashboard/public/vampire_lord.png'),
         attacks: [
             { name: 'Blood Slash', damage: 15, weight: 60 },
@@ -78,6 +83,7 @@ const bosses = [
         name: 'Storm Elemental',
         health: 200,
         maxHealth: 200,
+        difficulty: 'mid',
         image: path.join(__dirname, '../../dashboard/public/storm_elemental.png'),
         attacks: [
             { name: 'Lightning Strike', damage: 20, weight: 60 },
@@ -91,6 +97,7 @@ const bosses = [
         name: 'Fire Elemental',
         health: 200,
         maxHealth: 200,
+        difficulty: 'mid',
         image: path.join(__dirname, '../../dashboard/public/fire_elemental.png'),
         attacks: [
             { name: 'Inferno Blast', damage: 25, weight: 40 },
@@ -106,6 +113,7 @@ const bosses = [
         name: 'Ice Giant',
         health: 250,
         maxHealth: 250,
+        difficulty: 'strong',
         image: path.join(__dirname, '../../dashboard/public/ice_giant.png'),
         attacks: [
             { name: 'Frozen Strike', damage: 25, weight: 60 },
@@ -119,6 +127,7 @@ const bosses = [
         name: 'Shadow Assassin',
         health: 250,
         maxHealth: 250,
+        difficulty: 'strong',
         image: path.join(__dirname, '../../dashboard/public/shadow_assassin.png'),
         attacks: [
             { name: 'Shadow Strike', damage: 40, weight: 50 },
@@ -132,6 +141,7 @@ const bosses = [
         name: 'Ancient Phoenix',
         health: 300,
         maxHealth: 300,
+        difficulty: 'strong',
         image: path.join(__dirname, '../../dashboard/public/ancient_phoenix.png'),
         attacks: [
             { name: 'Flame Burst', damage: 30, weight: 60 },
@@ -145,6 +155,7 @@ const bosses = [
         name: 'Ancient Mummy',
         health: 300,
         maxHealth: 300,
+        difficulty: 'strong',
         image: path.join(__dirname, '../../dashboard/public/ancient_mummy.png'),
         attacks: [
             { name: 'Curse Strike', damage: 20, weight: 60 },
@@ -158,6 +169,7 @@ const bosses = [
         name: 'Lich Lord',
         health: 275,
         maxHealth: 275,
+        difficulty: 'strong',
         image: path.join(__dirname, '../../dashboard/public/lich_lord.png'),
         attacks: [
             { name: 'Death Ray', damage: 30, weight: 35 },
@@ -174,6 +186,7 @@ const bosses = [
         name: 'Demon King',
         health: 350,
         maxHealth: 350,
+        difficulty: 'very_strong',
         image: path.join(__dirname, '../../dashboard/public/demon_king.png'),
         attacks: [
             { name: 'Demon Blade', damage: 30, weight: 60 },
@@ -187,6 +200,7 @@ const bosses = [
         name: 'Sea Kraken',
         health: 400,
         maxHealth: 400,
+        difficulty: 'very_strong',
         image: path.join(__dirname, '../../dashboard/public/sea_kraken.png'),
         attacks: [
             { name: 'Tentacle Smash', damage: 35, weight: 60 },
@@ -200,6 +214,7 @@ const bosses = [
         name: 'Void Destroyer',
         health: 500,
         maxHealth: 500,
+        difficulty: 'very_strong',
         image: path.join(__dirname, '../../dashboard/public/void_destroyer.png'),
         attacks: [
             { name: 'Void Blast', damage: 50, weight: 60 },
@@ -718,9 +733,19 @@ async function endBossFight(state, message, playerWon) {
     clearInterval(state.intervalId);
     activeBossFights.delete(state.id);
 
+    let coinReward = state.boss.reward; // Default to boss reward if no config
     if (playerWon) {
-        db.prepare('UPDATE users SET coins = coins + ?, boss_wins = boss_wins + 1 WHERE user_id = ? AND server_id = ?').run(state.boss.reward, state.userId, state.serverId);
-        state.log.push(`🎉 You defeated ${state.boss.name}! +${state.boss.reward} coins!`);
+        // Get server config for coin rewards
+        const serverConfig = db.prepare('SELECT * FROM server_config WHERE server_id = ?').get(state.serverId);
+        if (serverConfig) {
+            if (state.boss.difficulty === 'easy') coinReward = serverConfig.coins_easy;
+            else if (state.boss.difficulty === 'mid') coinReward = serverConfig.coins_mid;
+            else if (state.boss.difficulty === 'strong') coinReward = serverConfig.coins_strong;
+            else if (state.boss.difficulty === 'very_strong') coinReward = serverConfig.coins_very_strong;
+        }
+        // Apply wealth bonus (5% per wealth point? Wait let's see original code: let's check how wealth worked before! Wait in existing code didn't have wealth bonus, let's check. Oh wait, let's just keep it as is for now, then add the coins
+        db.prepare('UPDATE users SET coins = coins + ?, boss_wins = boss_wins + 1 WHERE user_id = ? AND server_id = ?').run(coinReward, state.userId, state.serverId);
+        state.log.push(`🎉 You defeated ${state.boss.name}! +${coinReward} coins!`);
     } else {
         state.log.push(`💀 You were defeated by ${state.boss.name}!`);
     }

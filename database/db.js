@@ -74,6 +74,25 @@ CREATE TABLE IF NOT EXISTS user_ability_upgrades (
     level INTEGER DEFAULT 0,
     UNIQUE(user_id, server_id, ability_id)
 );
+
+CREATE TABLE IF NOT EXISTS server_config (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    server_id TEXT NOT NULL UNIQUE,
+    coins_easy INTEGER DEFAULT 100,
+    coins_mid INTEGER DEFAULT 150,
+    coins_strong INTEGER DEFAULT 200,
+    coins_very_strong INTEGER DEFAULT 300,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS server_tracked_channels (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    server_id TEXT NOT NULL,
+    channel_id TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(server_id, channel_id)
+);
 `);
 
 module.exports = db;

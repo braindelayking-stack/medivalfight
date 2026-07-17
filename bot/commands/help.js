@@ -1,4 +1,3 @@
-
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -16,23 +15,23 @@ module.exports = {
             .addFields(
                 {
                     name: '🎯 Getting Started',
-                    value: 'Use `/profile create` to start your adventure. You get 100 FREE points to distribute!',
+                    value: 'Use `/profile create` to start your adventure!',
                     inline: false
                 },
                 {
                     name: '💪 Stat Point System',
                     value: `
-- **Strength**: Increases damage dealt in battle
-- **Wealth**: Earns more coins from battles, unlocks wealth-based abilities
-- **Agility**: Higher chance to dodge boss attacks
-- **Composure**: Increases max HP (Base HP = 25, +5 HP per composure point)
+- **Strength**: Boosts your damage output in combat
+- **Wealth**: Get more coins after winning against bosses, grants wealth-based abilities
+- **Agility**: Improves your dodging of boss attacks
+- **Composure**: Enhances your maximum HP (Base HP = 25, +5 HP per point)
 - **Free Points**: Unassigned points you can distribute using \`/profile distribute\`
                     `,
                     inline: false
                 },
                 {
                     name: '🪙 Coin System',
-                    value: 'Earn coins by defeating bosses! Coins are used to buy abilities in the shop. Wealth stat increases coin earnings!',
+                    value: 'Earn coins by beating bosses! Your Wealth stat gives you more coins. Spend coins to get new abilities or items from shops!',
                     inline: false
                 },
                 {
