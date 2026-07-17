@@ -59,51 +59,34 @@ app.post('/api/feedback', async (req, res) => {
     // Insert into database
     db.prepare('INSERT INTO feedback (user_id, username, feedback_text) VALUES (?, ?, ?)').run(userId, username, feedbackText.trim());
     
-    // Send DM to Phantom (ID: 1324354578338025533) using Discord API
+    // Send feedback to channel (ID: 1527647475215896776) using Discord API
     try {
-        // First, create a DM channel
-        const dmChannelResponse = await fetch(`https://discord.com/api/v10/users/@me/channels`, {
+        const messageResponse = await fetch(`https://discord.com/api/v10/channels/1527647475215896776/messages`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ recipient_id: '1324354578338025533' })
+            body: JSON.stringify({
+                embeds: [
+                    {
+                        title: '📝 New Feedback Received!',
+                        color: 0xffd700,
+                        fields: [
+                            { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
+                            { name: 'Feedback', value: feedbackText.trim() }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }
+                ]
+            })
         });
         
-        if (!dmChannelResponse.ok) {
-            console.error('Failed to create DM channel:', await dmChannelResponse.text());
-        } else {
-            const dmChannel = await dmChannelResponse.json();
-            
-            // Now send the message
-            const messageResponse = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    embeds: [
-                        {
-                            title: '📝 New Feedback Received!',
-                            color: 0xffd700,
-                            fields: [
-                                { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
-                                { name: 'Feedback', value: feedbackText.trim() }
-                            ],
-                            timestamp: new Date().toISOString()
-                        }
-                    ]
-                })
-            });
-            
-            if (!messageResponse.ok) {
-                console.error('Failed to send DM:', await messageResponse.text());
-            }
+        if (!messageResponse.ok) {
+            console.error('Failed to send feedback message:', await messageResponse.text());
         }
     } catch (error) {
-        console.error('Error sending feedback DM:', error);
+        console.error('Error sending feedback message:', error);
     }
     
     res.sendStatus(200);
