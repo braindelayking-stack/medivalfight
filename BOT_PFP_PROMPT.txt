@@ -1,0 +1,59 @@
+
+# Ultra-Detailed Prompt for Medieval Fight Bot Profile Picture
+# This prompt represents ALL aspects of the bot: bosses, abilities, yappin'/chat points system!
+
+---
+
+Ultra-high detail, 8K, square (1:1) profile picture for a medieval fantasy Discord RPG bot called "Medieval Fight". The composition is a dramatic, epic collage-style image that blends all key elements of the bot into one cohesive, visually stunning piece, centered around a noble, sentient medieval stone golem (the bot's mascot) in the foreground.
+
+## Mascot (Foreground Center)
+The centerpiece is a majestic, sentient stone golem with intricate, ancient carvings covering its body. The golem has warm, glowing golden eyes and wears a tattered but regal deep burgundy cloak with gold embroidery. It holds a glowing, enchanted sword in its right hand, and in its left hand, it gently holds a floating, glowing orb that radiates soft golden light, representing the chat points/yappin' system (showing tiny glowing particles floating around it, like points being earned). The golem has a friendly but powerful expression, with subtle moss growing in the cracks of its stone skin, giving it an ancient, wise look.
+
+## Background & Boss Silhouettes
+Surrounding the golem in a circular, halo-like arrangement are subtle, semi-transparent silhouettes of ALL the bot's bosses, each with a small glowing accent color representing their difficulty:
+- Easy bosses (Golem, Dragon, Skeleton): Soft green glow
+- Mid bosses (Wraith King, Vampire Lord, Storm Elemental, Fire Elemental): Soft yellow glow
+- Strong bosses (Ice Giant, Shadow Assassin, Ancient Phoenix, Ancient Mummy, Lich Lord): Soft red glow
+- Very Strong bosses (Demon King, Sea Kraken, Void Destroyer): Soft purple glow
+Each boss silhouette is recognizable:
+- Golem: Big and blocky
+- Dragon: Large wings and long tail
+- Skeleton: Skull and bony frame
+- Wraith King: Ghostly, crown-like shape
+- Vampire Lord: Cape and fangs
+- Storm Elemental: Lightning bolts crackling around
+- Fire Elemental: Flame-like shape
+- Ice Giant: Frosty, crystalline appearance
+- Shadow Assassin: Sleek, shadowy figure with daggers
+- Ancient Phoenix: Majestic bird with fiery wings
+- Ancient Mummy: Bandaged body with ancient headdress
+- Lich Lord: Skeletal king with a staff
+- Demon King: Horns and menacing armor
+- Sea Kraken: Giant tentacles
+- Void Destroyer: Dark, cosmic shape with stars
+The bosses fade softly into a dreamy, medieval castle background with turrets, towers, and a soft sunset/sunrise sky filled with purple, orange, and pink hues, with small floating embers adding atmosphere.
+
+## Ability Symbols (Scattered Around)
+Scattered subtly around the composition, glowing softly, are small, iconic symbols representing ALL the bot's abilities, each with their own unique glow:
+- Strength Abilities (Fire Attack, Air Attack, Berserk, Smash, Shadow Strike): Fiery orange/red glow
+- Wealth Abilities (Golden Touch, Bribe): Shiny gold/yellow glow
+- Agility Abilities (Quick Step, Dodge): Swift blue/cyan glow
+- Composure Abilities (Composure Defense, Iron Will, Last Stand, Sacrifice): Steady green/emerald glow
+The symbols are small and not overwhelming, just enough to hint at the bot's ability system without cluttering the image.
+
+## Style & Technical Details
+- Art style: Epic fantasy illustration, highly detailed, realistic but stylized, similar to the art style of Magic: The Gathering or World of Warcraft cinematics
+- Lighting: Dramatic, cinematic lighting with warm golden light emanating from the golem's eyes and orb, contrasting with the soft sunset colors in the background
+- Textures: Ultra-high detail textures – stone grain on the golem, fabric weave on the cloak, glowing energy effects on the sword and orb, rough stone on the castle
+- Color palette: Muted medieval earth tones (browns, tans, deep reds, greens) with pops of gold, amber, and the boss accent colors
+- Atmosphere: Magical, epic, adventurous, inviting – perfect for a Discord RPG bot
+- Composition: Centered, balanced, with the golem as the clear focal point, surrounded by the boss silhouettes and ability symbols
+- Aspect ratio: 1:1 (perfect for Discord profile pictures)
+- Quality: 8K, ultra-high resolution, sharp details
+
+---
+
+Optional: If using Midjourney, add parameters like --ar 1:1 --style expressive --v 6 --s 750
+Optional: If using DALL-E, just use the full prompt as written
+Optional: If using Stable Diffusion, add "fantasy art, trending on ArtStation, intricate details, 8k resolution" to the end
+
