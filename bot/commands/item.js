@@ -46,8 +46,11 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor('#FFD700')
-                .setTitle(`${rarityEmoji} ${item.name}`)
-                .setDescription(item.description);
+                .setTitle(`${rarityEmoji} ${item.name}`);
+            
+            if (item.description) {
+                embed.addFields({ name: 'What it does:', value: item.description });
+            }
             
             if (item.effect) {
                 const effect = JSON.parse(item.effect);
@@ -68,7 +71,7 @@ module.exports = {
                     if (effect.stat === 'coins') effectStr += `${(effect.multiplier -1) *100}% coin bonus!`;
                     if (effect.stat === 'points') effectStr += `${(effect.multiplier -1)*100}% points bonus!`;
                 }
-                if (effectStr) embed.addFields({ name: 'Effect', value: effectStr });
+                if (effectStr) embed.addFields({ name: 'What it does:', value: effectStr });
             }
 
             // Find how to obtain
@@ -104,7 +107,7 @@ module.exports = {
                 }
             }
 
-            if (obtainFrom.length >0) embed.addFields({ name: 'How to Obtain', value: obtainFrom.join('\n') });
+            if (obtainFrom.length >0) embed.addFields({ name: 'Requirement:', value: obtainFrom.join('\n') });
 
             await interaction.editReply({ embeds: [embed] });
         }

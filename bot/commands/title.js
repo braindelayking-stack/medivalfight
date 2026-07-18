@@ -48,14 +48,16 @@ module.exports = {
                 .setColor('#FFD700')
                 .setTitle(`${rarityEmoji} ${title.name}`);
             
-            if (title.description) embed.setDescription(title.description);
+            if (title.description) {
+                embed.addFields({ name: 'What it does:', value: title.description });
+            }
 
             // Find how to obtain
             let obtainFrom = [];
             const achievementGivers = db.prepare('SELECT title FROM achievements WHERE reward_title_id = ?').all(title.id);
             for (const a of achievementGivers) obtainFrom.push(`Unlock achievement: "${a.title}"`);
 
-            if (obtainFrom.length >0) embed.addFields({ name: 'How to Obtain', value: obtainFrom.join('\n') });
+            if (obtainFrom.length >0) embed.addFields({ name: 'Requirement:', value: obtainFrom.join('\n') });
 
             await interaction.editReply({ embeds: [embed] });
         }
