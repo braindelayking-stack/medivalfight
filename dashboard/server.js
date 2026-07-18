@@ -19,7 +19,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 86400000 }
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 7 days!
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -214,6 +214,11 @@ app.get('/api/guilds/:serverId/role-shop', (req, res) => {
     try {
         const { serverId } = req.params;
         console.log('[DEBUG] Loading role shop for server:', serverId);
+        
+        if (!req.user) {
+            return res.status(401).json({ error: 'Not authenticated', needsReauth: true });
+        }
+        
         const guild = req.user?.guilds?.find(g => g.id === serverId);
         if (!guild || !(guild.permissions & 0x20)) {
             console.error('[DEBUG] No permission to access role shop');
@@ -233,6 +238,11 @@ app.put('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
         const { serverId, slot } = req.params;
         const { roleId, cost } = req.body;
         console.log('[DEBUG] Saving role shop slot:', slot, 'for server:', serverId, 'Data:', { roleId, cost });
+        
+        if (!req.user) {
+            return res.status(401).json({ error: 'Not authenticated', needsReauth: true });
+        }
+        
         const guild = req.user?.guilds?.find(g => g.id === serverId);
         if (!guild || !(guild.permissions & 0x20)) {
             console.error('[DEBUG] No permission to save role shop slot');
@@ -260,6 +270,11 @@ app.delete('/api/guilds/:serverId/role-shop/:slot', (req, res) => {
     try {
         const { serverId, slot } = req.params;
         console.log('[DEBUG] Deleting role shop slot:', slot, 'for server:', serverId);
+        
+        if (!req.user) {
+            return res.status(401).json({ error: 'Not authenticated', needsReauth: true });
+        }
+        
         const guild = req.user?.guilds?.find(g => g.id === serverId);
         if (!guild || !(guild.permissions & 0x20)) {
             console.error('[DEBUG] No permission to delete role shop slot');
@@ -316,17 +331,11 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
             return res.sendStatus(403);
         }
         
-        // Use user's OAuth access token instead of bot token
-        const accessToken = req.user?.accessToken;
-        if (!accessToken) {
-            console.error('[DEBUG] No access token found for user');
-            return res.status(401).json({ error: 'Not authenticated with Discord', needsReauth: true });
-        }
-        
-        console.log('[DEBUG] Fetching channels from Discord API using user token...');
+        // Use bot token instead of user token to avoid session expiration
+        console.log('[DEBUG] Fetching channels from Discord API using bot token...');
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
             headers: {
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
             }
         });
         
@@ -334,10 +343,6 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('[DEBUG] Failed to fetch guild channels:', errorText);
-            // If token expired, return special error for frontend to handle
-            if (response.status === 401) {
-                return res.status(401).json({ error: 'Discord token expired', needsReauth: true });
-            }
             return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
         }
         
@@ -360,6 +365,11 @@ app.get('/api/guilds/:serverId/config', (req, res) => {
     try {
         const { serverId } = req.params;
         console.log('[DEBUG] Loading config for server:', serverId);
+        
+        if (!req.user) {
+            return res.status(401).json({ error: 'Not authenticated', needsReauth: true });
+        }
+        
         const guild = req.user?.guilds?.find(g => g.id === serverId);
         if (!guild || !(guild.permissions & 0x20)) {
             console.error('[DEBUG] No permission to access guild config');
@@ -386,6 +396,11 @@ app.put('/api/guilds/:serverId/config', (req, res) => {
         const { serverId } = req.params;
         const { coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels } = req.body;
         console.log('[DEBUG] Saving config for server:', serverId, 'Data:', { coinsEasy, coinsMid, coinsStrong, coinsVeryStrong, trackedChannels });
+        
+        if (!req.user) {
+            return res.status(401).json({ error: 'Not authenticated', needsReauth: true });
+        }
+        
         const guild = req.user?.guilds?.find(g => g.id === serverId);
         if (!guild || !(guild.permissions & 0x20)) {
             console.error('[DEBUG] No permission to save guild config');

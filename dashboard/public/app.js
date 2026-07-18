@@ -143,12 +143,6 @@ async function loadServerChannels() {
     if (!currentServer) return;
     const response = await fetch(`/api/guilds/${currentServer.id}/channels`);
     if (!response.ok) {
-        const data = await response.json();
-        if (data.needsReauth) {
-            alert('Your Discord session has expired. Please log in again.');
-            window.location.href = '/auth/discord';
-            return;
-        }
         alert('Failed to load server channels!');
         return;
     }

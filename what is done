@@ -1,1 +1,24 @@
-the documentations page isnt updating for some reason so update it also remove the daily command since its just useless because the documentations page on the dashboard isnt up to dat iwht all new feautres we added
+[17/Jul/2026:14:51:41 +0200] [upstream] [2671836] STDOUT: [DEBUG] Loading channels for server: 1522630570289533108
+[17/Jul/2026:14:51:41 +0200] [upstream] [2671836] STDOUT: [DEBUG] User: 1324354578338025533 grisaiaphantomtrigger_10301
+[17/Jul/2026:14:51:41 +0200] [upstream] [2671836] STDOUT: [DEBUG] Fetching channels from Discord API...
+[17/Jul/2026:14:51:41 +0200] [upstream] [2671836] STDOUT: [DEBUG] Discord API response status: 401
+[17/Jul/2026:14:51:41 +0200] [upstream] [2671836] STDERR: [DEBUG] Failed to fetch guild channels: {"message": "401: Unauthorized", "code": 0}
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Feedback endpoint hit!
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Request body: { feedbackText: 'hi\ni am cool' }
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] DISCORD_TOKEN exists: true
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] User: {
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT:   userId: '1324354578338025533',
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT:   username: 'grisaiaphantomtrigger_10301'
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: }
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Feedback saved to database
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Starting to send feedback messages...
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Attempting to send feedback to channel: 1527647475215896776
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Sending message payload: {"embeds":[{"title":"📝 New Feedback Received!","color":16766720,"fields":[{"name":"User","value":"grisaiaphantomtrigger_10301 (ID: 1324354578338025533)","inline":true},{"name":"Feedback","value":"hi\ni am cool"}],"timestamp":"2026-07-17T12:52:34.380Z"}]}
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Discord API (channel) response status: 401
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDERR: [DEBUG] Failed to send feedback to channel: {"message": "401: Unauthorized", "code": 0}
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Attempting to send feedback to user: 1324354578338025533
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Creating DM channel for user 1324354578338025533
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDERR: [DEBUG] Failed to create DM channel for user 1324354578338025533: {"message": "401: Unauthorized", "code": 0}
+[17/Jul/2026:14:52:34 +0200] [upstream] [2671836] STDOUT: [DEBUG] Done sending feedback messages
+
+ok you can find the error here fix it
