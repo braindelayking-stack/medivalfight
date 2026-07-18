@@ -211,9 +211,21 @@ CREATE TABLE IF NOT EXISTS feedback (
     user_id TEXT NOT NULL,
     username TEXT NOT NULL,
     feedback_text TEXT NOT NULL,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    sent INTEGER DEFAULT 0
 );
+
+-- Add sent column if it doesn't exist
+PRAGMA table_info(feedback);
 `);
+
+// Check if sent column exists, if not, add it
+const tableInfo = db.prepare("PRAGMA table_info(feedback)").all();
+const hasSentColumn = tableInfo.some(col => col.name === 'sent');
+if (!hasSentColumn) {
+    console.log("Adding 'sent' column to feedback table");
+    db.prepare("ALTER TABLE feedback ADD COLUMN sent INTEGER DEFAULT 0").run();
+}
 
 // Seed initial data
 const seedData = async () => {

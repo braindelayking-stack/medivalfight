@@ -71,115 +71,9 @@ app.post('/api/feedback', async (req, res) => {
         return res.status(500).json({ error: 'Failed to save feedback to database' });
     }
     
-    // Try to send Discord notification but don't fail if it doesn't work
-    if (process.env.DISCORD_TOKEN) {
-        // Send feedback asynchronously without blocking response
-        sendDiscordFeedback(userId, username, feedbackText.trim()).catch(err => {
-            console.error('[DEBUG] Discord notification failed (non-critical):', err);
-        });
-    } else {
-        console.log('[DEBUG] DISCORD_TOKEN not configured, skipping Discord notification');
-    }
-    
-    // Return success immediately - feedback is saved in DB
+    // Return success immediately - feedback is saved in DB, bot will send it later
     res.status(200).json({ message: 'Feedback saved successfully!' });
 });
-
-// Async function to send Discord notifications without blocking
-async function sendDiscordFeedback(userId, username, feedbackText) {
-    console.log('[DEBUG] sendDiscordFeedback called for user:', username);
-    console.log('[DEBUG] DISCORD_TOKEN exists:', !!process.env.DISCORD_TOKEN);
-    console.log('[DEBUG] DISCORD_TOKEN length:', process.env.DISCORD_TOKEN?.length);
-    console.log('[DEBUG] DISCORD_TOKEN first 20 chars:', JSON.stringify(process.env.DISCORD_TOKEN?.substring(0,20)));
-    console.log('[DEBUG] DISCORD_TOKEN last 20 chars:', JSON.stringify(process.env.DISCORD_TOKEN?.substring(process.env.DISCORD_TOKEN.length-20)));
-    const token = process.env.DISCORD_TOKEN?.trim();
-    console.log('[DEBUG] Trimmed token length:', token?.length);
-    
-    // First validate the bot token
-    try {
-        const validateResponse = await fetch('https://discord.com/api/v10/users/@me', {
-            headers: {
-                'Authorization': `Bot ${token}`
-            }
-        });
-        console.log('[DEBUG] Bot token validation response status:', validateResponse.status);
-        if (!validateResponse.ok) {
-            const errorText = await validateResponse.text();
-            console.error('[DEBUG] Bot token validation failed:', errorText);
-            return; // Don't try to send if token is invalid
-        }
-        const botUser = await validateResponse.json();
-        console.log('[DEBUG] Bot user:', botUser.username);
-    } catch (error) {
-        console.error('[DEBUG] Bot token validation error:', error);
-        return;
-    }
-    
-    const sendFeedback = async (destinationId, isChannel = true) => {
-        const url = isChannel 
-            ? `https://discord.com/api/v10/channels/${destinationId}/messages`
-            : `https://discord.com/api/v10/users/@me/channels`;
-        
-        try {
-            let targetUrl = url;
-            if (!isChannel) {
-                const dmResponse = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bot ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ recipient_id: destinationId })
-                });
-                console.log(`[DEBUG] DM channel creation response status:`, dmResponse.status);
-                if (!dmResponse.ok) {
-                    const errorText = await dmResponse.text();
-                    console.error(`[DEBUG] DM channel creation failed:`, errorText);
-                    return;
-                }
-                const dmData = await dmResponse.json();
-                targetUrl = `https://discord.com/api/v10/channels/${dmData.id}/messages`;
-            }
-            
-            const messagePayload = {
-                embeds: [
-                    {
-                        title: '📝 New Feedback Received!',
-                        color: 0xffd700,
-                        fields: [
-                            { name: 'User', value: `${username} (ID: ${userId})`, inline: true },
-                            { name: 'Feedback', value: feedbackText }
-                        ],
-                        timestamp: new Date().toISOString()
-                    }
-                ]
-            };
-            
-            console.log(`[DEBUG] Sending to ${isChannel ? 'channel' : 'DM'}:`, targetUrl);
-            const messageResponse = await fetch(targetUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bot ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(messagePayload)
-            });
-            
-            console.log(`[DEBUG] Message response status:`, messageResponse.status);
-            if (messageResponse.ok) {
-                console.log(`[DEBUG] Feedback sent to ${isChannel ? 'channel' : 'DM'} successfully`);
-            } else {
-                const errorText = await messageResponse.text();
-                console.error(`[DEBUG] Failed to send message:`, errorText);
-            }
-        } catch (error) {
-            console.error(`[DEBUG] Error sending feedback to ${isChannel ? 'channel' : 'DM'}:`, error);
-        }
-    };
-    
-    // Only send to channel since bot is confirmed to be there
-    await sendFeedback('1527647475215896776', true);
-}
 
 app.get('/api/battle-log/:code', (req, res) => {
     const { code } = req.params;
@@ -327,41 +221,36 @@ app.get('/api/guilds/:serverId/bot-status', async (req, res) => {
 app.get('/api/guilds/:serverId/channels', async (req, res) => {
     try {
         const { serverId } = req.params;
-        console.log('[DEBUG] Loading channels for server:', serverId);
-        console.log('[DEBUG] User:', req.user?.id, req.user?.username);
+        console.log('Loading channels for server:', serverId);
         
         const guild = req.user?.guilds?.find(g => g.id === serverId);
         if (!guild || !(guild.permissions & 0x20)) {
-            console.error('[DEBUG] No permission to access guild channels');
+            console.error('No permission to access guild channels');
             return res.sendStatus(403);
         }
         
         // Use bot token instead of user token to avoid session expiration
         const token = process.env.DISCORD_TOKEN?.trim();
-        console.log('[DEBUG] Fetching channels from Discord API using bot token...');
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
             headers: {
                 'Authorization': `Bot ${token}`
             }
         });
         
-        console.log('[DEBUG] Discord API response status:', response.status);
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('[DEBUG] Failed to fetch guild channels:', errorText);
+            console.error('Failed to fetch guild channels:', errorText);
             return res.status(response.status).json({ error: 'Failed to fetch guild channels' });
         }
         
         const channels = await response.json();
-        console.log('[DEBUG] Channels from Discord:', channels.length, 'channels');
         
         // Filter to only text channels
         const textChannels = channels.filter(ch => ch.type === 0); // Type 0 is text channel
-        console.log('[DEBUG] Filtered to', textChannels.length, 'text channels');
         
         res.json(textChannels);
     } catch (error) {
-        console.error('[DEBUG] Error fetching guild channels:', error);
+        console.error('Error fetching guild channels:', error);
         res.status(500).json({ error: 'Failed to fetch guild channels' });
     }
 });
