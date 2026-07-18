@@ -90,12 +90,16 @@ async function sendDiscordFeedback(userId, username, feedbackText) {
     console.log('[DEBUG] sendDiscordFeedback called for user:', username);
     console.log('[DEBUG] DISCORD_TOKEN exists:', !!process.env.DISCORD_TOKEN);
     console.log('[DEBUG] DISCORD_TOKEN length:', process.env.DISCORD_TOKEN?.length);
+    console.log('[DEBUG] DISCORD_TOKEN first 20 chars:', JSON.stringify(process.env.DISCORD_TOKEN?.substring(0,20)));
+    console.log('[DEBUG] DISCORD_TOKEN last 20 chars:', JSON.stringify(process.env.DISCORD_TOKEN?.substring(process.env.DISCORD_TOKEN.length-20)));
+    const token = process.env.DISCORD_TOKEN?.trim();
+    console.log('[DEBUG] Trimmed token length:', token?.length);
     
     // First validate the bot token
     try {
         const validateResponse = await fetch('https://discord.com/api/v10/users/@me', {
             headers: {
-                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
+                'Authorization': `Bot ${token}`
             }
         });
         console.log('[DEBUG] Bot token validation response status:', validateResponse.status);
@@ -122,7 +126,7 @@ async function sendDiscordFeedback(userId, username, feedbackText) {
                 const dmResponse = await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
+                        'Authorization': `Bot ${token}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ recipient_id: destinationId })
@@ -155,7 +159,7 @@ async function sendDiscordFeedback(userId, username, feedbackText) {
             const messageResponse = await fetch(targetUrl, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bot ${process.env.DISCORD_TOKEN}`,
+                    'Authorization': `Bot ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(messagePayload)
@@ -295,13 +299,14 @@ app.get('/api/guilds/:serverId/bot-status', async (req, res) => {
         const { serverId } = req.params;
         
         // Use bot token to check if bot is in the guild
-        if (!process.env.DISCORD_TOKEN) {
+        const token = process.env.DISCORD_TOKEN?.trim();
+        if (!token) {
             return res.json({ botInServer: true }); // Assume true if no token
         }
         
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/members/${process.env.DISCORD_CLIENT_ID}`, {
             headers: {
-                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
+                'Authorization': `Bot ${token}`
             }
         });
         
@@ -332,10 +337,11 @@ app.get('/api/guilds/:serverId/channels', async (req, res) => {
         }
         
         // Use bot token instead of user token to avoid session expiration
+        const token = process.env.DISCORD_TOKEN?.trim();
         console.log('[DEBUG] Fetching channels from Discord API using bot token...');
         const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}/channels`, {
             headers: {
-                'Authorization': `Bot ${process.env.DISCORD_TOKEN}`
+                'Authorization': `Bot ${token}`
             }
         });
         
