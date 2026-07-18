@@ -6,17 +6,10 @@
 }
 body {
     font-family: 'Crimson Text', serif;
-    background: linear-gradient(135deg, #1a0f0a 0%, #2d1b13 25%, #3d2517 50%, #1a0f0a 75%, #0a0604 100%);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background: #2d1b13;
     color: #f5deb3;
     min-height: 100vh;
     position: relative;
-}
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 .scroll-bg {
     position: fixed;

@@ -18,32 +18,32 @@
             line-height: 1.6;
         }
         .container {
-            max-width: 700px;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px 15px;
         }
         .hero {
             text-align: left;
-            margin-bottom: 50px;
-            padding: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.06) 0%, rgba(255, 100, 0, 0.03) 100%);
             border: 1px solid rgba(255, 215, 0, 0.18);
-            border-radius: 18px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             letter-spacing: -1px;
         }
         .hero-text {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #d0d0d0;
-            margin-bottom: 18px;
+            margin-bottom: 12px;
         }
         .hero-text strong {
             color: #ffffff;
@@ -51,15 +51,15 @@
         }
         .hero-buttons {
             display: flex;
-            gap: 12px;
-            margin-top: 30px;
+            gap: 10px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
         .btn {
-            padding: 12px 28px;
-            border-radius: 12px;
+            padding: 10px 22px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-decoration: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
@@ -71,11 +71,11 @@
         .btn-primary {
             background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
             color: #0f0f1a;
-            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.35);
+            box-shadow: 0 6px 16px rgba(255, 215, 0, 0.35);
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 10px 24px rgba(255, 215, 0, 0.5);
         }
         .btn-secondary {
             background: rgba(255, 255, 255, 0.06);
@@ -88,71 +88,71 @@
             transform: translateY(-2px);
         }
         .section {
-            margin-bottom: 45px;
+            margin-bottom: 30px;
         }
         .section-title {
-            font-size: 1.7rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #ffd700;
             text-align: left;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
         .info-block {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 25px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 14px;
         }
         .info-block h3 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: #ffd700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: 700;
         }
         .info-block p, .info-block li {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #c8c8c8;
         }
         .info-block ul {
-            padding-left: 24px;
-            margin-top: 12px;
+            padding-left: 20px;
+            margin-top: 10px;
         }
         .info-block li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .commands-grid {
             display: grid;
-            gap: 12px;
+            gap: 10px;
         }
         .command-item {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px 20px;
+            border-radius: 10px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
         .command-name {
             font-weight: 700;
             color: #ffd700;
-            font-size: 0.95rem;
-            min-width: 200px;
+            font-size: 0.9rem;
+            min-width: 180px;
         }
         .command-desc {
             color: #c8c8c8;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .footer {
             text-align: left;
-            padding-top: 30px;
+            padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.12);
-            margin-top: 40px;
+            margin-top: 25px;
         }
         .footer p {
             color: #909090;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         .signature {
             color: #ffd700;
@@ -160,12 +160,12 @@
             font-style: italic;
         }
         @media (max-width: 768px) {
-            .hero { padding: 25px; }
-            .hero h1 { font-size: 2rem; }
-            .hero-text { font-size: 1rem; }
+            .hero { padding: 18px; }
+            .hero h1 { font-size: 1.7rem; }
+            .hero-text { font-size: 0.95rem; }
             .command-item { flex-direction: column; align-items: flex-start; }
             .command-name { min-width: auto; }
-            .info-block { padding: 20px; }
+            .info-block { padding: 16px; }
         }
     </style>
 </head>
