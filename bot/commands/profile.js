@@ -143,7 +143,22 @@ module.exports = {
         const embed = createEmbed(userData, interaction.user);
         const buttons = createButtons();
 
-        await interaction.reply({ embeds: [embed], components: buttons });
+        if (isNewUser) {
+            const tutorialEmbed = new EmbedBuilder()
+                .setTitle('🎉 Welcome to Medieval Fight!')
+                .setColor('#00ff00')
+                .setDescription('Here\'s how to get started:')
+                .addFields(
+                    { name: '1. Earn Points', value: 'Chat in tracked channels to get stat points!', inline: false },
+                    { name: '2. Upgrade Stats', value: 'Use the buttons below to spend points on strength, wealth, etc.!', inline: false },
+                    { name: '3. Fight Bosses', value: 'Use `/boss fight` to battle bosses and earn coins/items!', inline: false },
+                    { name: '4. Buy Abilities', value: 'Use `/abilities buy` to unlock powerful abilities!', inline: false },
+                    { name: 'Need Help?', value: 'Use `/help` to see all commands!', inline: false }
+                );
+            await interaction.reply({ embeds: [tutorialEmbed, embed], components: buttons });
+        } else {
+            await interaction.reply({ embeds: [embed], components: buttons });
+        }
     },
     async handleButton(interaction) {
         if (!interaction.isButton()) return;
